@@ -446,3 +446,11 @@ Applied a code review (three findings), keeping the log short:
 > Prepare it for Vercel, check the build compiles cleanly (all static pages and the puppy routes), then deploy with the Vercel CLI under the name `instabizwebclone` and confirm the live URL. Tell me if there are login issues.
 
 Clean build (no warnings or errors, 54 static pages, all 42 puppy pages). Added `.vercelignore`, linked the project `instabizwebclone`, set `NEXT_PUBLIC_SITE_URL` for production and deployed with `vercel deploy --prod`. Live at https://instabizwebclone.vercel.app. Checked on the live site on desktop and phone: 12 routes, no console errors, failed requests, broken images or overflow; the page curtain and mobile menu work; unknown paths give a real 404. No login problem: the CLI was already signed in.
+
+---
+
+## Prompt 22 — Connect to GitHub
+
+> Add the remote origin (https://github.com/jaimin013/instabizweb.git) and connect it to GitHub.
+
+Added `origin`, checked the tracked files hold nothing sensitive (no env files, tokens or tool folders), and pushed `main` with upstream tracking: all 12 commits are on GitHub.

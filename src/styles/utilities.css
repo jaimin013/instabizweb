@@ -1,0 +1,60 @@
+/* Small, reusable custom utilities (Tailwind v4 `@utility`). */
+
+/* Page width + responsive side gutter in one class. */
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Big headings get Fraunces' playful "wonky" letterforms. */
+@utility heading-wonk {
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 1,
+    "opsz" 144;
+}
+
+/* Shantell Sans with extra informality + bounce. */
+@utility font-hand-bouncy {
+  font-family: var(--font-hand);
+  font-variation-settings:
+    "INFM" 60,
+    "BNCE" 30;
+}
+
+/* Arch-topped photo frame used in the hero puppy row. */
+@utility arch {
+  border-radius: var(--radius-arch);
+  overflow: hidden;
+}
+
+/* Wider variant for the header/footer rails. */
+@utility container-wide {
+  width: 100%;
+  max-width: 110rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* The display face as used for headings, for elements that are not <h1>–<h3>. */
+@utility font-plush {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 1,
+    "opsz" 144;
+}
+
+/** Display face for running text such as quotes (the calmer optical size). */
+@utility font-plush-text {
+  font-family: var(--font-display);
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 0,
+    "opsz" 36;
+}

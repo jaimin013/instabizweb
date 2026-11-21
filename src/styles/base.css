@@ -1,0 +1,100 @@
+/* Element defaults. Kept in the `base` layer so any utility wins. */
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    /* Custom paw cursor; hotspot sits on the big pad. */
+    cursor:
+      url("/cursor/paw.svg") 9 6,
+      auto;
+  }
+
+  a,
+  button,
+  [role="button"],
+  label[for],
+  summary {
+    cursor:
+      url("/cursor/paw.svg") 9 6,
+      pointer;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    /* Fraunces axes: SOFT rounds the terminals, WONK adds the leaning letters, and
+       opsz 144 picks the high-contrast display cut, which is also narrower. */
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 1,
+      "opsz" 144;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-honey);
+    color: var(--color-cocoa);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-toffee);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* Lenis smooth scroll — required companion styles. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Global reduced-motion safety net. Individual components still
+   choose a calm alternative, this just stops anything that forgets. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

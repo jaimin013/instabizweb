@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../styles/utilities.css";
+
+@import "../styles/motion.css";
+@import "../styles/hero.css";
+@import "../styles/meet.css";
+@import "../styles/pup.css";
+@import "../styles/paths.css";
+@import "../styles/chat.css";
+@import "../styles/passport.css";
+@import "../styles/families.css";
+@import "../styles/night.css";
+@import "../styles/faq.css";
+@import "../styles/basket.css";
+@import "../styles/how.css";
+@import "../styles/puppies.css";
+@import "../styles/curtain.css";
+@import "../styles/contact.css";
+@import "../styles/story.css";
+@import "../styles/tickets.css";

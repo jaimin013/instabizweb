@@ -69,5 +69,5 @@ Requires Node.js 22 or later.
 
 ## Credits
 
-Design, copy and puppy photography (`public/puppies/`, `public/brand/logo.png`) belong to the reference site; this repository is a non-commercial
+Design, copy and puppy photography (`public/pups/`, `public/puppies/`, `public/brand/logo.png`) belong to the reference site; this repository is a non-commercial
 recreation made for an assessment. Illustrations, animations and code are written from scratch.

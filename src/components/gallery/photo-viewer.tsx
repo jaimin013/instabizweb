@@ -76,11 +76,17 @@ export function PhotoViewer({
       if (event.key === "ArrowLeft") move(-1);
     };
     window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.documentElement.style.overflow = "";
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [index, move]);
+
+  // The scroll lock belongs to the open/close effect above. This only makes sure the page is never left
+  // locked if the viewer is removed while a photo is open.
+  useEffect(
+    () => () => {
+      document.documentElement.style.overflow = "";
+    },
+    [],
+  );
 
   return (
     <dialog ref={ref} aria-label="Photo viewer" data-lenis-prevent className="viewer">

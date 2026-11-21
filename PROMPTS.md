@@ -432,3 +432,9 @@ Committed the whole project as eight commits in build order: scaffold; design sy
 Cleanup step 1 (quick wins from `FALLOW-REPORT.md`): deleted the unused `page-stub.tsx`; stopped exporting the symbols only used inside their own files. Fallow's "unused" dev dependency `@tailwindcss/turbopack` is a **false positive**: `next.config.ts` uses it by name as the Turbopack CSS loader, so it stays and is recorded in `.fallowrc.jsonc` with the reason. Dead code is now 0.
 
 Cleanup step 2: split Teddy's animation loop. The motion rules (pace from movement, easing of the rig towards its goal, the phone lane's walking height, the paw-print rule) now live in pure `lib/pup/motion.ts` with 8 unit tests. `tick` went from cyclomatic 40 to 12. Checked by running the old and new loop side by side: identical positions at 13 scroll points on a phone and identical gait range, so behaviour is unchanged.
+
+Applied a code review (three findings), keeping the log short:
+
+- Photo viewer: paging with the arrow keys unlocked the page scroll behind it. The scroll lock now stays with the open/close effect only.
+- Puppy data: `puppies.ts` and `listing.ts` were hand-written copies of `pups.ts`. Both are now derived from it (checked identical first), so editing a puppy happens in one place. The unused photo copies were removed.
+- `"type": "module"` added to `package.json`, which removes the test-runner warnings.

@@ -30,6 +30,11 @@ export type Pup = {
   /** "Imported for you" or "In Dubai". */
   where: string;
   media: readonly PupMedia[];
+  /**
+   * Presentation only, set on the puppies shown as cards: the door colour on the home hall and the tilt and
+   * wash colour of the card on /puppies (the strip of puppies who have gone home has no door).
+   */
+  look?: { door?: string; tilt: number; wash: string };
 };
 
 export const pups: readonly Pup[] = [
@@ -42,6 +47,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "3 months",
     where: "Imported for you",
+    look: { door: "#a24a1a", tilt: 0.36, wash: "#f2be6b" },
     media: [
       {
         kind: "image",
@@ -73,6 +79,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#5a3a28", tilt: -0.71, wash: "#bfddf5" },
     media: [
       {
         kind: "image",
@@ -185,6 +192,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#d4893f", tilt: -0.42, wash: "#bfddf5" },
     media: [
       {
         kind: "image",
@@ -233,6 +241,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "3 months Maltipoo & 2 months Cavapoo",
     where: "Imported for you",
+    look: { door: "#b8644a", tilt: -0.8, wash: "#f2be6b" },
     media: [
       {
         kind: "image",
@@ -273,6 +282,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy & girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#7a4a2e", tilt: 1.81, wash: "#bfddf5" },
     media: [
       {
         kind: "image",
@@ -312,6 +322,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "3 months",
     where: "Imported for you",
+    look: { door: "#a24a1a", tilt: 2.12, wash: "#bfddf5" },
     media: [
       {
         kind: "image",
@@ -390,6 +401,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "3 months",
     where: "Imported for you",
+    look: { door: "#5a3a28", tilt: 2.43, wash: "#fbe3b4" },
     media: [
       {
         kind: "image",
@@ -429,6 +441,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#d4893f", tilt: 1.47, wash: "#fbe3b4" },
     media: [
       {
         kind: "image",
@@ -477,6 +490,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#b8644a", tilt: 0.09, wash: "#f2be6b" },
     media: [
       {
         kind: "image",
@@ -507,6 +521,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#7a4a2e", tilt: -0.61, wash: "#fbe3b4" },
     media: [
       {
         kind: "image",
@@ -537,6 +552,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2.5 months",
     where: "Imported for you",
+    look: { door: "#a24a1a", tilt: 1.07, wash: "#e8c39a" },
     media: [
       {
         kind: "image",
@@ -585,6 +601,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#5a3a28", tilt: -0.34, wash: "#bfddf5" },
     media: [
       {
         kind: "image",
@@ -633,6 +650,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#d4893f", tilt: 2.24, wash: "#f9cdbf" },
     media: [
       {
         kind: "image",
@@ -663,6 +681,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#b8644a", tilt: -1.8, wash: "#f9cdbf" },
     media: [
       {
         kind: "image",
@@ -693,6 +712,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "2 months",
     where: "Imported for you",
+    look: { door: "#7a4a2e", tilt: 0.19, wash: "#fbe3b4" },
     media: [
       {
         kind: "image",
@@ -741,6 +761,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "3 months",
     where: "Imported for you",
+    look: { tilt: -0.63, wash: "#f9cdbf" },
     media: [
       {
         kind: "image",
@@ -789,6 +810,7 @@ export const pups: readonly Pup[] = [
     gender: "Boy",
     age: "3 months",
     where: "Imported for you",
+    look: { tilt: 0.28, wash: "#f9cdbf" },
     media: [
       {
         kind: "image",
@@ -838,6 +860,7 @@ export const pups: readonly Pup[] = [
     age: "3 months",
     colour: "Golden Cream",
     where: "In Dubai",
+    look: { tilt: -0.47, wash: "#bfddf5" },
     media: [
       {
         kind: "image",
@@ -886,6 +909,7 @@ export const pups: readonly Pup[] = [
     gender: "Girl",
     age: "3 months",
     where: "Imported for you",
+    look: { tilt: 0.31, wash: "#e8c39a" },
     media: [
       {
         kind: "image",
@@ -935,6 +959,7 @@ export const pups: readonly Pup[] = [
     age: "3 months",
     colour: "Marble",
     where: "Imported for you",
+    look: { tilt: 2.49, wash: "#e8c39a" },
     media: [
       {
         kind: "image",

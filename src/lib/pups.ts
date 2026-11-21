@@ -8,10 +8,54 @@ import { whatsappLink } from "@/lib/site";
 
 const bySlug = new Map(pups.map((p) => [p.slug, p]));
 
-const availablePups = pups.filter((p) => p.status === "available");
+export const availablePups = pups.filter((p) => p.status === "available");
 export const gonePups = pups.filter((p) => p.status === "gone");
 
 export const getPup = (slug: string): Pup | undefined => bySlug.get(slug);
+
+const lower = (text: string) => text.toLowerCase();
+
+/** "Maltipoo, boy, 3 months": the breed only for puppies with a name (otherwise the name already is the breed). */
+const descriptor = (pup: Pup, joiner: string) =>
+  [pup.named ? pup.breed : null, lower(pup.gender), pup.age].filter(Boolean).join(joiner);
+
+export const hasVideo = (pup: Pup) => pup.media.some((m) => m.kind === "video");
+
+/** Short caption, e.g. "Maltipoo, boy, 3 months, with video". */
+export const caption = (pup: Pup) => descriptor(pup, ", ") + (hasVideo(pup) ? ", with video" : "");
+
+/** The line under a card's name, e.g. "Maltipoo · boy · 3 months". */
+export const cardMeta = (pup: Pup) => descriptor(pup, " · ");
+
+/** Accessible name for a whole card. */
+export const cardLabel = (pup: Pup) =>
+  [
+    pup.name,
+    pup.named ? pup.breed : null,
+    lower(pup.gender),
+    pup.age,
+    pup.status === "gone" ? "gone home" : "available",
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+const BREED_KEYS = [
+  ["maltipoo", "maltipoo"],
+  ["pomeranian", "pomeranian"],
+  ["poodle", "poodle"],
+  ["cavapoo", "cavapoo"],
+  ["shih tzu", "shih-tzu"],
+] as const;
+
+/** Filter tags for the breeds in a puppy's breed or name, e.g. "Maltipoo & Cavapoo" gives both. */
+export const breedTags = (pup: Pup) =>
+  BREED_KEYS.filter(([word]) => lower(`${pup.breed} ${pup.name}`).includes(word)).map(([, tag]) => tag);
+
+/** "Boy & girl" is listed under both boys and girls. */
+export const genderTags = (pup: Pup): ("male" | "female")[] =>
+  lower(pup.gender).includes("&") ? ["male", "female"] : [lower(pup.gender) === "boy" ? "male" : "female"];
+
+export const collectionOf = (pup: Pup) => (pup.slug.startsWith("korean-teacup") ? "korean-teacup" : null);
 
 /** Previous and next puppy within the same group (available / gone home), wrapping round. */
 export function neighbours(pup: Pup) {

@@ -14,8 +14,20 @@ import {
 } from "react";
 import { TeddyActor } from "@/components/mascot/teddy-actor";
 import { emitFootprint } from "@/lib/pup/prints";
-import { HEAD_AT, HEAD_SCALE, rigOpacity, rigTransforms, STRIDE_UNITS, type RigParams } from "@/lib/pup/rig";
-import { actorAt, clamp, normalise, smoothstep, type Stop } from "@/lib/pup/timeline";
+import {
+  easeRig,
+  laneWalkY,
+  LANE_PEEK_FROM_BOTTOM,
+  LANE_SCALE,
+  shouldPrint,
+  STILL,
+  travelPace,
+  treadmillPace,
+  type Pace,
+  type Pose,
+} from "@/lib/pup/motion";
+import { HEAD_AT, HEAD_SCALE, rigOpacity, rigTransforms, type RigParams } from "@/lib/pup/rig";
+import { actorAt, normalise, type ActorState, type Stop } from "@/lib/pup/timeline";
 
 /*
  * One Teddy for the whole page.
@@ -28,7 +40,7 @@ import { actorAt, clamp, normalise, smoothstep, type Stop } from "@/lib/pup/time
  * on every frame.
  */
 
-export type PupPose = "walk" | "sit" | "bow" | "peek";
+export type PupPose = Pose;
 
 export type StopConfig = {
   id: string;
@@ -144,10 +156,6 @@ function resolve(cfg: StopConfig): Resolved | null {
  * Sections opt in with `data-pup-lane`. The hero and footer stops (where the page draws its own
  * Teddy) are kept; every other stop is ignored.
  */
-const LANE_SCALE = 0.6;
-const LANE_PEEK_FROM_BOTTOM = 161; // px between his box top and the bottom of the screen while peeking
-const LANE_WALK_FROM_BOTTOM = 221; // …when walking: he stands a little taller
-const LANE_EDGE = 0.15; // share of a corner-to-corner walk spent dropping onto / rising off the bar
 
 function laneStops(): Resolved[] {
   const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-pup-lane]")).filter(isShown);
@@ -185,6 +193,35 @@ function laneStops(): Resolved[] {
       holdAt: () => ({ x, y: peekY, s: LANE_SCALE }),
     };
   });
+}
+
+/** Everything the page has declared, measured now: the stops Teddy can stand at, in scroll order. */
+function buildStops(configs: Map<string, StopConfig>): Resolved[] {
+  let resolved = Array.from(configs.values())
+    .map(resolve)
+    .filter((s): s is Resolved => s !== null);
+  if (window.matchMedia("(max-width: 767px)").matches) {
+    const lane = laneStops();
+    if (lane.length > 0) {
+      resolved = [...resolved.filter((s) => s.cfg.local && s.cfg.pose === "peek"), ...lane];
+    }
+  }
+  return normalise(resolved);
+}
+
+/** His top edge: corner to corner on a phone he walks at his own height (see motion.ts); otherwise the timeline's. */
+function heightFor(state: ActorState): number {
+  const lane =
+    state.kind === "travel" && state.from.id.startsWith("lane-") && state.to.id.startsWith("lane-");
+  return lane ? laneWalkY(state.p, window.innerHeight) : state.at.y;
+}
+
+/** Write one frame of the rig to the SVG parts. */
+function drawRig(nodes: Record<string, SVGElement>, rig: RigParams) {
+  for (const [name, value] of Object.entries(rigTransforms(rig)))
+    nodes[name]?.setAttribute("transform", value);
+  for (const [name, value] of Object.entries(rigOpacity(rig)))
+    nodes[name === "body" ? "bodyAll" : name]?.setAttribute("opacity", String(value));
 }
 
 export function PupProvider({ children }: { children: ReactNode }) {
@@ -241,6 +278,26 @@ export function PupProvider({ children }: { children: ReactNode }) {
     let walked = 0; // world distance since the last paw print
     let side = 1;
 
+    /** How fast, and which way, is he really moving this frame? Also turns him to face where he is going. */
+    const measure = (state: ActorState, x: number, y: number, scroll: number, dt: number): Pace => {
+      const holding = state.kind === "hold" ? (state.stop as Resolved).cfg : null;
+      let pace = STILL;
+      if (prev && state.kind === "travel") {
+        pace = travelPace(x - prev.x, y + scroll - (prev.y + prev.scroll), dt);
+        walked += pace.moved;
+      }
+      if (holding?.treadmill) {
+        const shift = holding.treadmill.current;
+        const before = lastShift.get(holding.id) ?? shift;
+        lastShift.set(holding.id, shift);
+        pace = treadmillPace(shift, before, dt);
+      } else if (holding && !pace.facing) {
+        facingTarget = holding.facing ?? facingTarget;
+      }
+      if (pace.facing) facingTarget = pace.facing;
+      return pace;
+    };
+
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
       const dt = last ? Math.min(60, Math.max(1, now - last)) : 16;
@@ -248,16 +305,7 @@ export function PupProvider({ children }: { children: ReactNode }) {
 
       if (dirty.current) {
         dirty.current = false;
-        let resolved = Array.from(configs.current.values())
-          .map(resolve)
-          .filter((s): s is Resolved => s !== null);
-        if (window.matchMedia("(max-width: 767px)").matches) {
-          const lane = laneStops();
-          if (lane.length > 0) {
-            resolved = [...resolved.filter((s) => s.cfg.local && s.cfg.pose === "peek"), ...lane];
-          }
-        }
-        stops = normalise(resolved);
+        stops = buildStops(configs.current);
       }
 
       const scroll = window.scrollY;
@@ -268,82 +316,29 @@ export function PupProvider({ children }: { children: ReactNode }) {
       }
 
       const { x, s } = state.at;
-      let { y } = state.at;
-      if (state.kind === "travel" && state.from.id.startsWith("lane-") && state.to.id.startsWith("lane-")) {
-        // Corner to corner on a phone: leave the bar's edge, walk a little higher (feet on its top line), land again.
-        const vh = window.innerHeight;
-        const peekY = vh - LANE_PEEK_FROM_BOTTOM;
-        const walkY = vh - LANE_WALK_FROM_BOTTOM;
-        const edge = Math.min(
-          smoothstep(clamp(state.p / LANE_EDGE)),
-          smoothstep(clamp((1 - state.p) / LANE_EDGE)),
-        );
-        y = peekY + (walkY - peekY) * edge;
-      }
+      const y = heightFor(state);
       const holding = state.kind === "hold" ? (state.stop as Resolved).cfg : null;
 
-      // --- how fast is he actually moving through the world? -------------------
-      let walkSpeed = 0;
-      let heading = 0;
-      let stepPx = 0; // screen px he covered this frame; the gait advances by this, not by time
-      if (prev) {
-        const dx = x - prev.x;
-        const dyWorld = y + scroll - (prev.y + prev.scroll);
-        if (state.kind === "travel") {
-          walkSpeed = (Math.hypot(dx, dyWorld) * 16.7) / dt;
-          heading = Math.atan2(dyWorld, dx);
-          if (Math.abs(dx) > 0.4) facingTarget = dx > 0 ? 1 : -1;
-          walked += Math.hypot(dx, dyWorld);
-          stepPx = Math.hypot(dx, dyWorld);
-        }
-      }
-      if (holding?.treadmill) {
-        const shift = holding.treadmill.current;
-        const before = lastShift.get(holding.id) ?? shift;
-        const delta = ((shift - before) * 16.7) / dt;
-        lastShift.set(holding.id, shift);
-        walkSpeed = Math.abs(delta);
-        stepPx = Math.abs(shift - before);
-        if (walkSpeed > 0.6) facingTarget = delta > 0 ? 1 : -1;
-      } else if (holding) {
-        facingTarget = holding.facing ?? facingTarget;
-      }
+      const pace = measure(state, x, y, scroll, dt);
       prev = { x, y, scroll, s };
+      easeRig(rig, { pose: holding?.pose, act: holding?.act, pace, facing: facingTarget, scale: s, now }, dt);
+      drawRig(nodes, rig);
 
-      // --- smooth the rig towards where he should be ---------------------------
-      const ease = (tau: number) => 1 - Math.exp(-dt / tau);
-      rig.amp += (clamp(walkSpeed / 7) - rig.amp) * ease(110);
-      // One full leg cycle per STRIDE_UNITS of ground (in his own drawing units), so feet never skate.
-      if (rig.amp > 0.03) rig.phase += (stepPx / s / STRIDE_UNITS) * Math.PI * 2;
-      rig.facing += (facingTarget - rig.facing) * ease(70);
-      rig.sit += ((holding?.pose === "sit" ? 1 : 0) - rig.sit) * ease(150);
-      rig.bow += ((holding?.pose === "bow" ? 1 : 0) - rig.bow) * ease(170);
-      rig.peek += ((holding?.pose === "peek" ? 1 : 0) - rig.peek) * ease(110);
-      const tiltTarget = holding?.act === "tilt" ? 11 : Math.sin(now / 2300) * 3 * (1 - rig.amp);
-      rig.tilt += (tiltTarget - rig.tilt) * ease(220);
-      rig.t = now;
-
-      const transforms = rigTransforms(rig);
-      for (const [name, value] of Object.entries(transforms)) nodes[name]?.setAttribute("transform", value);
-      const opacity = rigOpacity(rig);
-      for (const [name, value] of Object.entries(opacity))
-        nodes[name === "body" ? "bodyAll" : name]?.setAttribute("opacity", String(value));
-
-      // --- place him ---------------------------------------------------------
+      // Place him. A stop the page draws its own Teddy at hides the roaming one while he is held there.
       actor.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
       const hiddenHere = holding?.local === true;
       actor.style.visibility = hiddenHere ? "hidden" : "visible";
       // Which local stop (if any) the page itself is drawing him at; CSS hides the others' copies.
       html.dataset.pupAt = hiddenHere && holding ? holding.id : "none";
 
-      // --- paw prints while he walks across the page ---------------------------
-      if (state.kind === "travel" && rig.amp > 0.35 && walked > 46) {
+      // Paw prints while he walks across the page.
+      if (shouldPrint(state.kind === "travel", rig.amp, walked)) {
         walked = 0;
         side = -side;
         emitFootprint({
           x: x + (ACTOR_W / 2 + rig.facing * 26) * s,
           y: y + scroll + (ACTOR_H - 8) * s + side * 5 * s,
-          angle: heading + Math.PI / 2,
+          angle: pace.heading + Math.PI / 2,
           doc: true,
         });
       }

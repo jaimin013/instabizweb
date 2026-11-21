@@ -462,3 +462,15 @@ Added `origin`, checked the tracked files hold nothing sensitive (no env files, 
 > Yes, connect the Vercel project to this GitHub repo.
 
 Ran `vercel git connect` for `jaimin013/instabizweb`, so every push to `main` now deploys to production automatically.
+
+---
+
+## Prompt 24 — Puppy page showed empty on phones: add a skeleton
+
+> Tell me how the puppy detail page is made, as there is a slight lag when showing it on mobile (no need to fix, just what it used). Then write it in the prompt log and fix it with a skeleton placeholder so it does not show empty when we open a puppy page.
+
+**How the page is made.** One template, `/puppies/[slug]`, built ahead of time for all 42 puppies from one data file (`data/pups.ts`); unknown slugs give a real 404. With Cache Components on, Next requires route params to be read inside a Suspense boundary, so the page is delivered as prerendered HTML in which the story arrives in a hidden block that a script swaps in.
+
+**Why it lagged.** That Suspense boundary had no fallback, so on a slow phone `<main>` was empty for a moment before the story swapped in (the original shows a skeleton that reserves the space).
+
+**Fix.** `PupSkeleton` is the Suspense fallback: soft pulsing blocks the size of the real breadcrumb, photo frame, thumbnails and name tag, so the page is never blank and the layout doesn't jump when the story replaces it. It is part of the prerendered HTML of all 42 pages, respects reduced motion, and is announced as "Loading this puppy…" to screen readers. Checked on a production build with the phone throttled (6x slower CPU, slow network): skeleton first, then the story, nothing left behind.

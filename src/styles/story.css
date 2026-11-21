@@ -307,3 +307,23 @@
     animation: none;
   }
 }
+
+/* Loading placeholder for a puppy page (see pup-skeleton.tsx): soft honey blocks that gently pulse. */
+.tp-skel {
+  background: color-mix(in oklab, var(--color-honey-soft) 80%, var(--color-milk));
+  border: 3px solid color-mix(in oklab, var(--color-cocoa) 12%, transparent);
+  animation: tp-skel-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes tp-skel-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tp-skel {
+    animation: none;
+  }
+}

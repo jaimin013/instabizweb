@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { PupSkeleton } from "@/components/pup-page/pup-skeleton";
 import { PupStory } from "@/components/pup-page/pup-story";
 import { pups } from "@/data/pups";
 import { getPup, pupCopy } from "@/lib/pups";
@@ -32,7 +33,7 @@ async function PupFromParams({ params }: Pick<PageProps<"/puppies/[slug]">, "par
 
 export default function PupPage({ params }: PageProps<"/puppies/[slug]">) {
   return (
-    <Suspense>
+    <Suspense fallback={<PupSkeleton />}>
       <PupFromParams params={params} />
     </Suspense>
   );

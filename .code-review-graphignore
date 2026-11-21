@@ -1,0 +1,5 @@
+# Saved snapshot of the reference site (third-party minified bundles)
+puppy.instabizweb.com/**
+# Build output & dependencies
+.next/**
+node_modules/**

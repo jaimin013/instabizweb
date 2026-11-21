@@ -1,0 +1,26 @@
+/* The roaming Teddy: one fixed overlay, positioned every frame by pup-layer.tsx. */
+.pup-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pup-actor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 240px;
+  transform-origin: 0 0;
+  /* Hidden until the first frame has placed him, so he never flashes at 0,0. */
+  visibility: hidden;
+  will-change: transform;
+}
+
+/* Where the page draws its own copy of Teddy (hero ledge, footer basket), that copy only shows while the
+   roaming dog is parked there. Before JavaScript runs nothing is hidden. */
+html[data-pup-at]:not([data-pup-at="hero"]) .hero-teddy,
+html[data-pup-at]:not([data-pup-at="footer"]) .basket-peek {
+  visibility: hidden;
+}

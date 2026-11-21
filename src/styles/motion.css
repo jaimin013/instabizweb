@@ -1,0 +1,297 @@
+/*
+ * Keyframes + the few component styles that can't be expressed as
+ * utilities (native <dialog> states, pseudo-element animation).
+ * Everything here is neutralised by the reduced-motion rule in base.css.
+ */
+
+/* ── Mobile menu (<dialog class="menu">) ─────────────────────────── */
+/* The menu blooms outward from the "Menu" button (top-right) as a
+   circle, and shrinks back into it on close. */
+@keyframes menu-in {
+  from {
+    clip-path: circle(0% at calc(100% - 3.25rem) 2rem);
+  }
+  to {
+    clip-path: circle(150% at calc(100% - 3.25rem) 2rem);
+  }
+}
+@keyframes menu-out {
+  from {
+    clip-path: circle(150% at calc(100% - 3.25rem) 2rem);
+  }
+  to {
+    clip-path: circle(0% at calc(100% - 3.25rem) 2rem);
+  }
+}
+@keyframes menu-backdrop-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes menu-link {
+  from {
+    opacity: 0;
+    transform: translateY(1.6rem) rotate(-3deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.menu[open] {
+  animation: menu-in 0.5s var(--ease-snap) both;
+}
+.menu[data-closing] {
+  animation: menu-out 0.42s var(--ease-snap) forwards;
+}
+.menu[data-closing]::backdrop {
+  animation: menu-backdrop-out 0.42s forwards;
+}
+.menu[open] .menu-link {
+  animation: menu-link 0.55s var(--ease-pounce) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 140ms);
+}
+
+/* ── Footer night sky ────────────────────────────────────────────── */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(18deg);
+  }
+}
+.twinkle {
+  animation: twinkle 3.6s ease-in-out infinite;
+}
+
+/* Crescent made from one circle and an inset shadow "bite". */
+.moon {
+  position: absolute;
+  top: 10%;
+  right: 7%;
+  width: clamp(2.6rem, 5vw, 3.6rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  rotate: -14deg;
+  box-shadow: inset -0.85rem 0.25rem 0 0 var(--color-honey-soft);
+  filter: drop-shadow(0 0 14px color-mix(in oklab, var(--color-honey) 55%, transparent));
+}
+
+/* ── Hero entrances ──────────────────────────────────────────────── */
+@keyframes sunrise {
+  0% {
+    opacity: 0;
+    translate: -50% 16%;
+  }
+}
+/* Slide up from behind the quilt. */
+@keyframes peek {
+  0% {
+    translate: 0 100%;
+  }
+}
+
+/* ── Teddy ───────────────────────────────────────────────────────── */
+@keyframes blink-shut {
+  0%,
+  92%,
+  97%,
+  100% {
+    opacity: 0;
+  }
+  94.5% {
+    opacity: 1;
+  }
+}
+@keyframes blink-open {
+  0%,
+  92%,
+  97%,
+  100% {
+    opacity: 1;
+  }
+  94.5% {
+    opacity: 0;
+  }
+}
+@keyframes ear-twitch {
+  0%,
+  84%,
+  100% {
+    rotate: 0deg;
+  }
+  87% {
+    rotate: -5deg;
+  }
+  90% {
+    rotate: 2.5deg;
+  }
+  93% {
+    rotate: -1deg;
+  }
+}
+@keyframes breathe {
+  50% {
+    scale: 1 1.014;
+  }
+}
+
+.teddy-eyes-open {
+  animation: blink-open 5.4s linear infinite;
+}
+.teddy-eyes-shut {
+  opacity: 0;
+  animation: blink-shut 5.4s linear infinite;
+}
+.teddy-ear {
+  transform-box: fill-box;
+  transform-origin: 50% 8%;
+  animation: ear-twitch 7s ease-in-out infinite;
+}
+.teddy-ear--r {
+  animation-duration: 9s;
+  animation-delay: -3s;
+}
+.teddy-breathe {
+  transform-box: view-box;
+  transform-origin: 50% 100%;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Teddy rises from behind the quilt (keeps his -50% centring translate). */
+@keyframes teddy-rise {
+  0% {
+    translate: -50% 100%;
+  }
+}
+.teddy-peek {
+  animation: teddy-rise 0.9s var(--ease-pounce) 0.45s backwards;
+}
+
+/* ── Teddy: head tilt + happy face ───────────────────────────────── */
+.teddy-head {
+  transform-box: view-box;
+  transform-origin: 120px 160px;
+  rotate: var(--tilt, 0deg);
+  transition: rotate 0.55s var(--ease-pounce);
+}
+.teddy-eyes-happy,
+.teddy-tongue {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+svg[data-happy="true"] :is(.teddy-eyes-happy, .teddy-tongue) {
+  opacity: 1;
+}
+svg[data-happy="true"] :is(.teddy-eyes-open, .teddy-eyes-shut) {
+  opacity: 0;
+  animation: none;
+}
+
+/* A puppy popping back up after swapping photos. */
+@keyframes pop-up {
+  0% {
+    translate: 0 108%;
+    scale: 0.92;
+  }
+  60% {
+    translate: 0 -10%;
+    scale: 1.03;
+  }
+  100% {
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+/* ── Teddy: click his face and he blushes ─────────────────────────── */
+.teddy-cheek {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.teddy-spark {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+svg[data-blush="true"] .teddy-eyes-open {
+  animation: blush-open 2.4s both;
+}
+svg[data-blush="true"] .teddy-eyes-shut {
+  animation: blush-shut 2.4s both;
+}
+svg[data-blush="true"] .teddy-cheek {
+  animation: blush-cheek 2.4s both;
+}
+svg[data-blush="true"] .teddy-spark {
+  animation: blush-spark 2.4s both;
+}
+/* eyes close at once, stay shut a moment, then open again */
+@keyframes blush-open {
+  0%,
+  36% {
+    opacity: 0;
+  }
+  44%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes blush-shut {
+  0% {
+    opacity: 0;
+  }
+  6%,
+  36% {
+    opacity: 1;
+  }
+  44%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes blush-cheek {
+  0% {
+    fill: #f9a99a;
+    scale: 1;
+    opacity: 0.85;
+  }
+  12%,
+  72% {
+    fill: #ff7d9c;
+    scale: 1.45;
+    opacity: 1;
+  }
+  100% {
+    fill: #f9a99a;
+    scale: 1;
+    opacity: 0.85;
+  }
+}
+/* …and sparkle a little brighter once reopened */
+@keyframes blush-spark {
+  0%,
+  42% {
+    opacity: 0;
+    scale: 0.4;
+  }
+  54%,
+  82% {
+    opacity: 1;
+    scale: 1.2;
+  }
+  100% {
+    opacity: 0;
+    scale: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  svg[data-blush="true"] :is(.teddy-eyes-open, .teddy-eyes-shut, .teddy-cheek, .teddy-spark) {
+    animation: none;
+  }
+}

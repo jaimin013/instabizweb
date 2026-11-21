@@ -438,3 +438,11 @@ Applied a code review (three findings), keeping the log short:
 - Photo viewer: paging with the arrow keys unlocked the page scroll behind it. The scroll lock now stays with the open/close effect only.
 - Puppy data: `puppies.ts` and `listing.ts` were hand-written copies of `pups.ts`. Both are now derived from it (checked identical first), so editing a puppy happens in one place. The unused photo copies were removed.
 - `"type": "module"` added to `package.json`, which removes the test-runner warnings.
+
+---
+
+## Prompt 21 — Deploy to Vercel
+
+> Prepare it for Vercel, check the build compiles cleanly (all static pages and the puppy routes), then deploy with the Vercel CLI under the name `instabizwebclone` and confirm the live URL. Tell me if there are login issues.
+
+Clean build (no warnings or errors, 54 static pages, all 42 puppy pages). Added `.vercelignore`, linked the project `instabizwebclone`, set `NEXT_PUBLIC_SITE_URL` for production and deployed with `vercel deploy --prod`. Live at https://instabizwebclone.vercel.app. Checked on the live site on desktop and phone: 12 routes, no console errors, failed requests, broken images or overflow; the page curtain and mobile menu work; unknown paths give a real 404. No login problem: the CLI was already signed in.

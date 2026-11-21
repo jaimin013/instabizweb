@@ -67,6 +67,18 @@ pnpm lint && pnpm typecheck && pnpm format:check && pnpm test
 
 Requires Node.js 22 or later.
 
+## Live site and deploying
+
+Live: **https://instabizwebclone.vercel.app** (Vercel project `instabizwebclone`).
+
+```bash
+pnpm build                                   # must finish with no errors: 54 static pages incl. all 42 /puppies/<slug>
+npx vercel deploy --prod --yes               # needs `npx vercel login` once; the project is linked in .vercel/ (git-ignored)
+```
+
+- `NEXT_PUBLIC_SITE_URL` (production) is set to the live URL; it feeds the metadata and social links.
+- `.vercelignore` keeps the reference snapshot, tool folders and caches out of the upload.
+
 ## Credits
 
 Design, copy and puppy photography (`public/pups/`, `public/puppies/`, `public/brand/logo.png`) belong to the reference site; this repository is a non-commercial

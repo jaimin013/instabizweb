@@ -1,0 +1,19 @@
+# Not part of the app: kept out of the upload so deploys are small and nothing private ships.
+# (Vercel uses this file instead of .gitignore, so the git-ignored paths are repeated here.)
+node_modules
+.next
+.git
+tsconfig.tsbuildinfo
+
+# Saved snapshot of the reference site (third-party bundles)
+puppy.instabizweb.com
+
+# Tooling and editor folders
+.claude
+.gemini
+.github
+.vscode
+.mcp.json
+.code-review-graph
+.code-review-graphignore
+.fallow

@@ -454,3 +454,11 @@ Clean build (no warnings or errors, 54 static pages, all 42 puppy pages). Added 
 > Add the remote origin (https://github.com/jaimin013/instabizweb.git) and connect it to GitHub.
 
 Added `origin`, checked the tracked files hold nothing sensitive (no env files, tokens or tool folders), and pushed `main` with upstream tracking: all 12 commits are on GitHub.
+
+---
+
+## Prompt 23 — Connect Vercel to the GitHub repo
+
+> Yes, connect the Vercel project to this GitHub repo.
+
+Ran `vercel git connect` for `jaimin013/instabizweb`, so every push to `main` now deploys to production automatically.

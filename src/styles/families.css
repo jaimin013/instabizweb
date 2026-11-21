@@ -1,0 +1,636 @@
+/*
+ * Polaroids, tape and the two places they hang: the shop-front photo wall on the
+ * home page ("dusk" scene) and the full wall on /happy-families. Plus the photo viewer.
+ */
+
+/* ── A polaroid held up with tape ────────────────────────────────── */
+.polaroid {
+  position: relative;
+  display: block;
+  padding: 0.6rem 0.6rem 0;
+  background: #fffefb;
+  border-radius: 0.2rem;
+  box-shadow:
+    0 1px 1px #2a170e1f,
+    0 10px 20px -8px #2a170e5c;
+  rotate: var(--tilt);
+  transition:
+    rotate 0.5s var(--ease-pounce),
+    translate 0.5s var(--ease-pounce),
+    box-shadow 0.4s var(--ease-silk);
+}
+.polaroid-photo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #e8dfd3;
+  border-radius: 1px;
+  box-shadow: inset 0 0 0 1px #2a170e14;
+}
+.polaroid-photo img {
+  display: block;
+}
+.polaroid-caption {
+  display: block;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.2rem 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  color: var(--color-cocoa-soft);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tape {
+  position: absolute;
+  z-index: 2;
+  width: clamp(4rem, 34%, 6.2rem);
+  height: 1.35rem;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, #ffffff24 3px 5px),
+    linear-gradient(90deg, #ffffff47, transparent 30%, #ffffff2e 70%, transparent),
+    color-mix(in oklab, var(--tape, #f6d79a) 78%, transparent);
+  opacity: 0.88;
+  /* ragged torn ends */
+  clip-path: polygon(
+    0 10%,
+    3% 0,
+    50% 4%,
+    97% 0,
+    100% 14%,
+    98% 40%,
+    100% 66%,
+    97% 100%,
+    50% 96%,
+    3% 100%,
+    0 86%,
+    2% 52%
+  );
+  transition:
+    scale 0.35s var(--ease-pounce),
+    opacity 0.3s;
+}
+.tape--center {
+  top: -0.7rem;
+  left: 50%;
+  translate: -50%;
+  rotate: -3deg;
+}
+.tape--left {
+  top: -0.55rem;
+  left: 10%;
+  rotate: -9deg;
+}
+.tape--right {
+  top: -0.55rem;
+  right: 10%;
+  rotate: 8deg;
+}
+.tape--tl,
+.tape--tr {
+  top: 0.05rem;
+  width: clamp(3.2rem, 26%, 4.6rem);
+}
+.tape--tl {
+  left: -1rem;
+  rotate: -40deg;
+}
+.tape--tr {
+  right: -1rem;
+  rotate: 40deg;
+}
+
+@keyframes print-bound {
+  0% {
+    opacity: 0;
+    translate: 0 1.6rem;
+    scale: 0.9;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  42% {
+    opacity: 1;
+    translate: 0 -0.4rem;
+    scale: 0.98 1.03;
+    animation-timing-function: cubic-bezier(0.5, 0, 0.7, 0.4);
+  }
+  68% {
+    translate: 0;
+    scale: 1.03 0.97;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+  100% {
+    opacity: 1;
+    translate: 0;
+    scale: 1;
+  }
+}
+@keyframes paw-pat {
+  0% {
+    opacity: 0;
+    transform: translateY(-1.2rem) rotate(-16deg) scale(1.15);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.7, 0.6);
+  }
+  32% {
+    opacity: 0.92;
+    transform: translateY(0.12rem) rotate(-6deg) scale(1.06, 0.88);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+  52% {
+    opacity: 0.92;
+    transform: translateY(-0.3rem) rotate(-8deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-0.1rem) rotate(-8deg) scale(1);
+  }
+}
+
+/* ── /happy-families ─────────────────────────────────────────────── */
+.memories {
+  background:
+    repeating-linear-gradient(90deg, #0000 0 46px, #c2622b0b 46px 48px),
+    radial-gradient(70% 40% at 50% 0, #ffd68c73, #0000 70%), linear-gradient(#fff3df, #fbe9cc 60%, #f7e0bd);
+}
+.memories-head {
+  display: grid;
+  gap: 2.5rem 4rem;
+  align-items: end;
+}
+@media (min-width: 1024px) {
+  .memories-head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+  }
+}
+.memories-title {
+  line-height: 1.06;
+}
+.memories-heart {
+  display: inline-block;
+  width: 0.42em;
+  margin-left: 0.25em;
+  color: var(--color-toffee);
+  translate: 0 -0.12em;
+}
+.memories-note {
+  position: relative;
+  padding: 1.6rem 1.5rem 1.2rem;
+  background:
+    linear-gradient(#0000 1.55rem, #2f6e9e21 1.55rem 1.6rem) 0 0.4rem / 100% 1.6rem,
+    #fffdf6;
+  border-radius: 0.3rem;
+  box-shadow: 0 8px 18px -8px #2a170e59;
+  rotate: 1.4deg;
+}
+.memories-note blockquote {
+  font-size: clamp(1.02rem, 1.2vw, 1.15rem);
+  line-height: 1.6rem;
+}
+.memories-note figcaption {
+  margin-top: 0.8rem;
+  color: var(--color-toffee-ink);
+}
+.memories-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: clamp(2rem, 6vh, 4rem);
+}
+
+.wall {
+  columns: 2 10.5rem;
+  column-gap: clamp(1rem, 3vw, 2.6rem);
+  list-style: none;
+}
+@media (min-width: 768px) {
+  .wall {
+    columns: 3;
+  }
+}
+@media (min-width: 1280px) {
+  .wall {
+    columns: 4;
+  }
+}
+.wall-item {
+  padding: 1.1rem 0.35rem clamp(1.4rem, 3vw, 2.4rem);
+  break-inside: avoid;
+}
+.wall-print {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0.3rem;
+}
+.wall-print:is(:hover, :focus-visible) .polaroid {
+  translate: 0 -6px;
+  rotate: 0deg;
+  box-shadow:
+    0 1px 1px #2a170e1f,
+    0 18px 30px -14px #2a170e6b;
+}
+.wall-print:active .polaroid {
+  translate: 0 -2px;
+}
+.wall-paw {
+  position: absolute;
+  top: -1.25rem;
+  left: 50%;
+  z-index: 3;
+  width: clamp(1.8rem, 24%, 2.6rem);
+  color: var(--color-toffee);
+  pointer-events: none;
+  opacity: 0;
+  translate: -50%;
+}
+.wall-item[data-armed]:not([data-revealed]) .polaroid {
+  opacity: 0;
+}
+.wall-item[data-armed][data-revealed] .polaroid {
+  animation: print-bound 0.62s var(--d) backwards;
+}
+.wall-item[data-armed][data-revealed] .wall-paw {
+  animation: paw-pat 0.7s calc(var(--d) + 0.2s) both;
+}
+.wall-item[data-armed]:not([data-revealed]) .tape {
+  opacity: 0;
+  scale: 1.25 0.6;
+}
+.wall-item .tape {
+  transition:
+    scale 0.35s var(--ease-pounce) calc(var(--d) + 0.42s),
+    opacity 0.2s calc(var(--d) + 0.42s);
+}
+.memories [data-reveal]:not(.wall-item) {
+  transition:
+    opacity 0.6s ease,
+    translate 0.7s var(--ease-silk);
+}
+.memories [data-reveal][data-armed]:not([data-revealed]):not(.wall-item) {
+  opacity: 0;
+  translate: 0 1rem;
+}
+
+/* ── Home: the shop front with its photo wall ────────────────────── */
+.dusk {
+  padding-top: clamp(3rem, 7vh, 5rem);
+  overflow-x: clip;
+  background: linear-gradient(#a65a30, #4d2b19);
+  color: var(--ink);
+}
+.dusk-sky {
+  position: relative;
+  display: grid;
+  gap: 2.25rem;
+  max-width: 110rem;
+  margin-inline: auto;
+}
+.dusk-note {
+  position: relative;
+  max-width: 34rem;
+  padding: 1.3rem 1.5rem 1.2rem;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.8rem 1.8rem 1.8rem 0.35rem;
+  box-shadow: 7px 9px #140a0540;
+  rotate: 1.2deg;
+}
+.dusk-note blockquote {
+  font-size: clamp(1.02rem, 1.25vw, 1.2rem);
+  line-height: 1.5;
+}
+.dusk-note figcaption {
+  margin-top: 0.7rem;
+  color: var(--color-toffee-ink);
+}
+@media (min-width: 1024px) {
+  .dusk-sky {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 31rem);
+    align-items: end;
+  }
+  /* The speech-bubble tail */
+  .dusk-note::after {
+    position: absolute;
+    bottom: -1.05rem;
+    left: 2.2rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    content: "";
+    background: var(--color-milk);
+    border: 3px solid var(--color-cocoa);
+    border-top: 0;
+    border-left: 0;
+    rotate: 45deg;
+  }
+}
+
+.photowall {
+  position: relative;
+  margin-top: clamp(3rem, 7vh, 4.5rem);
+}
+.photowall-wall {
+  position: relative;
+  max-width: 104rem;
+  padding: clamp(2.2rem, 4vw, 3.2rem) clamp(1rem, 3vw, 2.75rem) 0;
+  margin-inline: clamp(0.75rem, 3vw, 3rem);
+  background:
+    radial-gradient(55% 45% at 12% 100%, #ffcd6e47, #0000 70%),
+    repeating-linear-gradient(0deg, #0000 0 46px, #2a170e1f 46px 48px), linear-gradient(#80482a, #6c3b22);
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 1rem 1rem 0 0;
+}
+@media (min-width: 1680px) {
+  .photowall-wall {
+    margin-inline: auto;
+  }
+}
+/* The beam the prints hang from */
+.photowall-wall::before {
+  position: absolute;
+  inset: -1.15rem -0.9rem auto;
+  height: 1.7rem;
+  content: "";
+  background:
+    repeating-linear-gradient(90deg, #0000 0 18px, #2a170e59 18px 21px) 0 100% / 100% 0.55rem no-repeat,
+    #5a301b;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.55rem;
+}
+.photowall-prints {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.1rem;
+  align-items: start;
+  list-style: none;
+}
+.photowall-prints > li:nth-child(n + 7) {
+  display: none;
+}
+@media (min-width: 640px) {
+  .photowall-prints {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.4rem 1.6rem;
+  }
+}
+@media (min-width: 1024px) {
+  .photowall-prints {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.6rem clamp(1.4rem, 2.6vw, 2.8rem);
+  }
+  .photowall-prints > li:nth-child(n + 7) {
+    display: block;
+  }
+  .photowall-prints > li:nth-child(4n + 2),
+  .photowall-prints > li:nth-child(4n + 3) {
+    margin-top: 1.4rem;
+  }
+}
+.photowall-print {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: inherit;
+  background: none;
+  border: 0;
+}
+.photowall .polaroid-photo {
+  aspect-ratio: 4 / 4.6;
+}
+.photowall .polaroid-photo img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+.photowall .polaroid {
+  transition:
+    opacity 0.45s ease var(--d),
+    translate 0.75s var(--ease-pounce) var(--d),
+    rotate 0.75s var(--ease-pounce) var(--d),
+    box-shadow 0.4s var(--ease-silk);
+}
+.photowall .tape {
+  transition:
+    scale 0.35s var(--ease-pounce) calc(var(--d) + 0.52s),
+    opacity 0.25s calc(var(--d) + 0.52s);
+}
+.photowall li[data-armed]:not([data-revealed]) .polaroid {
+  opacity: 0;
+  translate: 0 -2.6rem;
+  rotate: calc(var(--tilt) + 9deg);
+}
+.photowall li[data-armed]:not([data-revealed]) .tape {
+  opacity: 0;
+  scale: 1.3 0.5;
+}
+.photowall-print:is(:hover, :focus-visible) .polaroid {
+  transition-delay: 0s;
+  translate: 0 -5px;
+  rotate: 0deg;
+}
+
+/* ── The shop front: door, lamp, pavement ────────────────────────── */
+.facade-ground {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: clamp(10rem, 18vw, 13rem);
+  margin-top: 2.6rem;
+}
+.facade-door {
+  position: relative;
+  width: clamp(5.5rem, 8vw, 7.5rem);
+  height: clamp(8.5rem, 12vw, 11rem);
+  background:
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 1.5px),
+      #2a170e66 calc(50% - 1.5px) calc(50% + 1.5px),
+      transparent calc(50% + 1.5px)
+    ),
+    var(--color-toffee-deep);
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  box-shadow:
+    0 0 0 6px #b2733f,
+    0 0 0 9px var(--color-cocoa);
+}
+.lamp {
+  position: absolute;
+  bottom: 0;
+  left: 9%;
+  width: 0.7rem;
+  height: clamp(9rem, 14vw, 12.5rem);
+  background: #3b2215;
+  border: 2px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+.lamp-light {
+  position: absolute;
+  top: -1.9rem;
+  left: 50%;
+  width: 2.4rem;
+  height: 2.1rem;
+  background: #ffd27f;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.6rem 0.6rem 1.1rem 1.1rem;
+  box-shadow: 0 0 44px 20px #ffcd6e73;
+  translate: -50%;
+}
+.facade-cta {
+  position: absolute;
+  right: clamp(0.5rem, 5vw, 5rem);
+  bottom: 1.6rem;
+}
+.dusk-teddy {
+  position: absolute;
+  bottom: -0.4rem;
+  left: calc(50% + clamp(3.5rem, 6vw, 5.5rem));
+  width: clamp(8rem, 11vw, 11rem);
+  aspect-ratio: 300 / 240;
+}
+.street-pavement {
+  height: clamp(1.6rem, 3vw, 2.4rem);
+  background:
+    repeating-linear-gradient(90deg, #0000 0 calc(6rem - 2px), #ffffff12 calc(6rem - 2px) 6rem), #3a2114;
+  border-top: 3px solid var(--color-cocoa);
+}
+@media (max-width: 639px) {
+  .facade-ground {
+    flex-direction: column;
+    gap: 1.2rem;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 0;
+    padding-top: 1rem;
+  }
+  .facade-cta {
+    position: static;
+    order: -1;
+  }
+  .lamp {
+    left: 6%;
+  }
+  .dusk-teddy {
+    right: 4%;
+    left: auto;
+  }
+}
+
+/* ── Photo viewer ────────────────────────────────────────────────── */
+.viewer {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  color: var(--color-milk);
+  background: #2a170ef2;
+}
+.viewer::backdrop {
+  background: #2a170eb3;
+}
+.viewer[open] {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  animation: viewer-in 0.35s var(--ease-silk) both;
+}
+@keyframes viewer-in {
+  from {
+    opacity: 0;
+  }
+}
+.viewer-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: clamp(3.5rem, 8vh, 5rem) clamp(1rem, 6vw, 6rem) 0;
+}
+.viewer-photo {
+  max-width: 100%;
+  max-height: 100%;
+  background: #fffefb;
+  border-radius: 0.3rem;
+  box-shadow: 0 20px 50px -10px #000000a6;
+  padding: 0.7rem 0.7rem 0;
+  rotate: -1deg;
+  animation: viewer-photo 0.5s var(--ease-pounce) both;
+}
+@keyframes viewer-photo {
+  from {
+    opacity: 0;
+    scale: 0.92;
+    translate: 0 1rem;
+  }
+}
+.viewer-photo img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 15rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.viewer-caption {
+  min-height: 2.6rem;
+  padding: 0.6rem 0.4rem 0.7rem;
+  font-size: 1.05rem;
+  color: var(--color-cocoa-soft);
+  text-align: center;
+}
+.viewer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.1rem 1rem calc(1.1rem + env(safe-area-inset-bottom));
+}
+.viewer-count {
+  min-width: 5.5rem;
+  font-weight: 650;
+  text-align: center;
+}
+.viewer-btn {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 2px solid var(--color-cocoa);
+  border-radius: 50%;
+  box-shadow: 0 4px 0 -1px #00000066;
+  transition: transform 0.3s var(--ease-pounce);
+}
+.viewer-btn:hover {
+  transform: translateY(-2px) rotate(-4deg);
+}
+.viewer-btn:active {
+  transform: scale(0.94);
+}
+.viewer-btn svg {
+  width: 1.3rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.viewer-close {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  right: 1rem;
+  z-index: 2;
+}

@@ -1,0 +1,274 @@
+/*
+ * Home hero: sky gradient + sun glow, the row of arched puppy photos that
+ * "peek" over a quilted ledge, and Teddy in the middle.
+ *
+ * Geometry is driven by a handful of custom properties set on the stage so
+ * everything scales together:
+ *   --quilt-h  height of the quilt ledge the puppies stand behind
+ *   --tw       Teddy's width
+ *   --rise     extra photo height so arches never show their bottom edge
+ */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--header-h));
+  overflow-x: clip;
+  background: linear-gradient(var(--sky-top, var(--color-milk)), var(--sky-bottom, var(--color-cream)));
+}
+
+.hero-sun {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  z-index: -1;
+  width: min(86vw, 58rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--color-honey) 42%, transparent) 0,
+    color-mix(in oklab, var(--color-honey-soft) 30%, transparent) 38%,
+    transparent 66%
+  );
+  animation: sunrise 2.6s var(--ease-silk) both;
+}
+
+.hero-copy {
+  position: relative;
+  padding-top: clamp(1rem, 4.5vh, 3.75rem);
+  text-align: center;
+}
+
+.hero-stage {
+  --quilt-h: clamp(4.5rem, 12vh, 8rem);
+  --tw: clamp(15rem, min(30vw, 46vh), 27rem);
+  --rise: clamp(0.75rem, 2.4vh, 1.75rem);
+  position: relative;
+  flex: 1;
+  min-height: clamp(14rem, 38vh, 25rem);
+  margin-top: clamp(0.5rem, 2vh, 1.5rem);
+}
+
+@media (max-width: 639px) {
+  .hero-stage {
+    --tw: clamp(13rem, 60vw, 17rem);
+    min-height: clamp(14rem, 36vh, 19rem);
+  }
+}
+
+/* Teddy: centred, resting on the ledge. Rendered as a <button> so a click/tap can pat him. */
+.hero-teddy {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--quilt-h) + 16px + var(--tw) * 0.09);
+  z-index: 10;
+  display: block;
+  /* The drawing fills its viewBox, so it renders narrower than --tw. 0.467 = 0.6 (HEAD_SCALE) × 240/300 × 0.973, which keeps his head the same size when the roaming dog takes over. */
+  width: calc(var(--tw) * 0.467);
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 40% 40% 0 0;
+  translate: -50% 0;
+}
+
+/* The original's head is a little larger relative to its box on wide screens, and sits lower on the arches. */
+@media (min-width: 768px) {
+  .hero-teddy {
+    bottom: calc(var(--quilt-h) + 16px + var(--tw) * 0.03);
+    width: calc(var(--tw) * 0.56);
+  }
+}
+
+/* ── Quilted ledge ───────────────────────────────────────────────── */
+.quilt {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 25;
+  height: var(--quilt-h);
+  background:
+    repeating-linear-gradient(45deg, transparent 0 46px, #2a170e12 46px 48px),
+    repeating-linear-gradient(-45deg, transparent 0 46px, #2a170e12 46px 48px),
+    var(--quilt, var(--color-cream));
+}
+.quilt-edge {
+  position: absolute;
+  top: -39px;
+  left: 0;
+  display: block;
+  /* Decorative strip overlapping the arches: must not swallow their hover/clicks. */
+  pointer-events: none;
+}
+
+/* ── Puppy lineup ────────────────────────────────────────────────── */
+.lineup {
+  position: absolute;
+  inset: 0;
+}
+
+/* Each seat sets desktop (--dx/--dw/--dpeek) and phone (--mx/--mw/--mpeek)
+   placement inline; the media query picks which set is live. */
+.seat {
+  --x: var(--dx);
+  --w: var(--dw);
+  --peek: var(--dpeek);
+  --h0: calc(var(--w) * var(--seat-k, 1) * 1.25);
+  --h: calc(var(--h0) + var(--rise, 0px));
+  position: absolute;
+  left: var(--x);
+  bottom: calc(var(--quilt-h) - (1 - var(--peek)) * var(--h0));
+  width: calc(var(--w) * var(--seat-k, 1));
+  translate: -50%;
+  rotate: var(--tilt);
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .seat {
+    --seat-k: 0.8;
+  }
+}
+@media (max-width: 639px) {
+  .seat {
+    --x: var(--mx);
+    --w: var(--mw);
+    --peek: var(--mpeek);
+  }
+}
+
+.seat-pup {
+  position: relative;
+  display: block;
+  border-radius: 999px 999px 0 0;
+  animation: peek 0.75s var(--ease-pounce) backwards;
+  animation-delay: calc(0.62s + var(--i) * 90ms);
+}
+
+.seat-photo {
+  position: relative;
+  display: block;
+  height: var(--h);
+  overflow: hidden;
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  background: var(--color-honey-soft);
+  box-shadow: inset 0 0 0 4px var(--color-milk);
+  transition: translate 0.45s var(--ease-pounce);
+}
+.seat-pup:is(:hover, :focus-visible) .seat-photo {
+  translate: 0 -12%;
+}
+
+/* Name tag that pops over the photo on hover / keyboard focus. */
+.seat-name {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  left: 50%;
+  z-index: 31;
+  max-width: 46vw;
+  padding: 0.1rem 0.7rem;
+  overflow: hidden;
+  font-size: 0.95rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  background: var(--color-milk);
+  border: 2px solid var(--color-cocoa);
+  border-radius: 999px;
+  opacity: 0;
+  translate: var(--tag-x, -50%) 0.4rem;
+  transition:
+    opacity 0.2s,
+    translate 0.35s var(--ease-pounce);
+}
+.seat:has(.seat-pup:is(:hover, :focus-visible)) .seat-name {
+  opacity: 1;
+  translate: var(--tag-x, -50%) -12%;
+}
+.seat:first-child {
+  --tag-x: -22%;
+}
+.seat:last-child {
+  --tag-x: -78%;
+}
+@media (max-width: 639px) {
+  .seat-name {
+    font-size: 0.82rem;
+  }
+}
+
+/* ── Teddy: sinking, speech bubble ───────────────────────────────── */
+.teddy-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: translate 0.6s var(--ease-pounce);
+}
+
+.teddy-bubble {
+  position: absolute;
+  bottom: 86%;
+  left: 66%;
+  z-index: 5;
+  padding: 0.3rem 0.8rem;
+  font-size: clamp(0.85rem, 1.15vw, 1.05rem);
+  line-height: 1.1;
+  white-space: nowrap;
+  pointer-events: none;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 2px solid var(--color-cocoa);
+  border-radius: 1rem 1rem 1rem 0.2rem;
+  opacity: 0;
+  scale: 0.5;
+  transform-origin: 0 100%;
+  transition:
+    opacity 0.2s,
+    scale 0.35s var(--ease-pounce);
+}
+.teddy-bubble[data-show="true"] {
+  opacity: 1;
+  scale: 1;
+}
+.teddy-bubble[data-side="left"] {
+  right: 66%;
+  left: auto;
+  border-radius: 1rem 1rem 0.2rem 1rem;
+  transform-origin: 100% 100%;
+}
+
+/* ── Scrolled away: everyone ducks behind the quilt ──────────────── */
+.seat-pup {
+  transition: translate 0.6s var(--ease-pounce);
+  transition-delay: calc(var(--i) * 50ms);
+}
+.hero-stage[data-here="false"] .seat-pup {
+  translate: 0 58%;
+}
+.hero-stage[data-here="false"] .teddy-svg {
+  translate: 0 64%;
+}
+
+/* ── Random duck → swap → pop ────────────────────────────────────── */
+.seat-pup[data-state="duck"] .seat-photo {
+  opacity: 0.6;
+  scale: 0.92;
+  translate: 0 108%;
+  transition:
+    translate 0.34s var(--ease-snap),
+    scale 0.34s var(--ease-snap),
+    opacity 0.34s ease-in;
+}
+.seat-pup[data-state="pop"] .seat-photo {
+  animation: pop-up 0.58s var(--ease-pounce) both;
+}
+.seat[data-tag="show"] .seat-name {
+  opacity: 1;
+  translate: var(--tag-x, -50%) -12%;
+}

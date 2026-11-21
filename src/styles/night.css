@@ -1,0 +1,281 @@
+/*
+ * The last two scenes of the home page: "Questions, answered" under a starry night, and the
+ * closing "Ready to meet your new best friend?" with a little house, a lamp and a door that
+ * swings open as you scroll to it.
+ */
+
+/* ── Questions ───────────────────────────────────────────────────── */
+.night {
+  position: relative;
+  padding-block: clamp(4.5rem, 10vh, 7rem);
+  overflow: hidden;
+  background: linear-gradient(#4d2b19, #2f1a10);
+  color: var(--ink);
+}
+.night-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.night-grid {
+  position: relative;
+  display: grid;
+  gap: 3rem;
+}
+.night-cta {
+  margin-top: 2rem;
+}
+.night-pup {
+  position: relative;
+  width: clamp(9.5rem, 30vw, 13rem);
+  margin-top: 2.25rem;
+}
+.night-teddy {
+  aspect-ratio: 300 / 240;
+  width: 100%;
+}
+.night-wonder {
+  position: absolute;
+  top: -2.4rem;
+  left: 58%;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  line-height: 1;
+  color: var(--color-honey);
+  animation: float 3.4s ease-in-out infinite;
+}
+@keyframes float {
+  50% {
+    translate: 0 -0.5rem;
+  }
+}
+.night-list {
+  display: grid;
+  gap: clamp(2rem, 4.5vh, 3.25rem);
+}
+.qa-q {
+  display: flex;
+  gap: 0.75rem;
+  font-size: clamp(1.4rem, 2vw, 1.95rem);
+  line-height: 1.12;
+}
+.qa-star {
+  flex: none;
+  width: 1.15rem;
+  margin-top: 0.3rem;
+  color: var(--color-honey);
+}
+.qa-a {
+  max-width: 58ch;
+  padding-left: 1.9rem;
+  margin-top: 0.7rem;
+  color: var(--ink-soft);
+}
+@media (min-width: 1024px) {
+  .night-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    column-gap: clamp(3rem, 7vw, 8rem);
+  }
+}
+@media (max-width: 1023px) {
+  .night-pup {
+    display: none;
+  }
+}
+
+/* ── Closing: the house ──────────────────────────────────────────── */
+.closing {
+  padding-top: clamp(4.5rem, 10vh, 7rem);
+  text-align: center;
+  background: linear-gradient(#2f1a10, #24130b);
+  color: var(--ink);
+}
+.closing-copy h2 {
+  max-width: 15ch;
+  margin-inline: auto;
+}
+.closing-lede {
+  max-width: 52ch;
+  margin: 1.2rem auto 0;
+  font-size: clamp(1.05rem, 1.3vw, 1.3rem);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  padding-block: clamp(2rem, 4vh, 2.75rem) clamp(5rem, 11vh, 8rem);
+}
+
+.house {
+  position: relative;
+  width: min(100%, 44rem);
+  height: clamp(21rem, 46vh, 29rem);
+  margin: clamp(2.5rem, 6vh, 4rem) auto 0;
+}
+/* The brick front */
+.house::before {
+  position: absolute;
+  inset: 0 6% 2.2rem;
+  content: "";
+  background:
+    repeating-linear-gradient(0deg, #0000 0 30px, #00000024 30px 32px), linear-gradient(#5c3622, #4a2a19);
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 1.4rem 1.4rem 0 0;
+}
+/* The step */
+.house::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 2.4rem;
+  content: "";
+  background: #3a2114;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.6rem 0.6rem 0 0;
+}
+.house-doorway {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  z-index: 1;
+  width: clamp(8.5rem, 15vw, 11.5rem);
+  aspect-ratio: 1 / 1.62;
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  box-shadow:
+    0 0 0 7px #b2733f,
+    0 0 0 10px var(--color-cocoa),
+    0 0 60px 18px #ffcd7859;
+  perspective: 1000px;
+  translate: -50%;
+}
+.house-inside {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 70%, #ffe4a8, #e9a95a);
+  border-radius: inherit;
+}
+.house-door {
+  position: absolute;
+  inset: -3px -3px 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 1.5px),
+      #2a170e59 calc(50% - 1.5px) calc(50% + 1.5px),
+      transparent calc(50% + 1.5px)
+    ),
+    var(--color-toffee-deep);
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  transform: rotateY(-102deg);
+  transform-origin: 0;
+}
+@keyframes house-open {
+  from {
+    transform: rotateY(0);
+  }
+  to {
+    transform: rotateY(-102deg);
+  }
+}
+@supports (animation-timeline: view()) {
+  .house-door {
+    animation: house-open linear both;
+    animation-timeline: view();
+    animation-range: entry 80% cover 52%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .house-door {
+    animation: none !important;
+  }
+}
+.house-peep {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  width: 34%;
+  aspect-ratio: 1;
+  background: #ffd98f;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 50%;
+  translate: -50%;
+}
+.house-knob {
+  position: absolute;
+  top: 58%;
+  right: 12%;
+  width: 0.9rem;
+  aspect-ratio: 1;
+  background: var(--color-honey);
+  border: 2.5px solid var(--color-cocoa);
+  border-radius: 50%;
+}
+.house-lamp {
+  position: absolute;
+  bottom: calc(2.2rem + clamp(8.5rem, 15vw, 11.5rem));
+  left: calc(50% + clamp(6.5rem, 11vw, 8.5rem));
+  width: 1.9rem;
+  height: 2.6rem;
+  background: #ffd27f;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.5rem 0.5rem 1rem 1rem;
+  box-shadow: 0 0 46px 22px #ffcd6e66;
+}
+.house-plant {
+  position: absolute;
+  bottom: 2.2rem;
+  width: clamp(3.4rem, 6vw, 4.6rem);
+  aspect-ratio: 1 / 1.5;
+  background:
+    radial-gradient(ellipse 34% 30% at 30% 30%, #5f8f4a 96%, transparent 100%),
+    radial-gradient(ellipse 34% 30% at 70% 26%, #6fa356 96%, transparent 100%),
+    radial-gradient(ellipse 30% 34% at 50% 14%, #7bb060 96%, transparent 100%),
+    linear-gradient(transparent 52%, var(--color-toffee) 52%);
+  clip-path: polygon(0 0, 100% 0, 100% 52%, 88% 100%, 12% 100%, 0 52%);
+}
+.house-plant--left {
+  left: calc(50% - clamp(9.5rem, 16vw, 12.5rem));
+}
+.house-plant--right {
+  right: calc(50% - clamp(9.5rem, 16vw, 12.5rem));
+}
+.house-mat {
+  position: absolute;
+  bottom: 0.25rem;
+  left: 50%;
+  z-index: 1;
+  width: clamp(10rem, 16vw, 13rem);
+  height: 1.9rem;
+  font-size: 0.95rem;
+  line-height: 1.55rem;
+  color: var(--color-cocoa);
+  background: repeating-linear-gradient(90deg, var(--color-honey) 0 0.6rem, #e7a957 0.6rem 1.2rem);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.45rem;
+  translate: -50%;
+}
+.house-teddy {
+  position: absolute;
+  bottom: 0.4rem;
+  left: calc(50% - clamp(15rem, 24vw, 19rem));
+  z-index: 1;
+  width: clamp(8.5rem, 13vw, 11.5rem);
+  aspect-ratio: 300 / 240;
+}
+@media (max-width: 639px) {
+  .house-teddy {
+    left: 0;
+    width: 7.25rem;
+  }
+  .house-plant--left {
+    display: none;
+  }
+}

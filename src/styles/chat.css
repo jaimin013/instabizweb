@@ -1,0 +1,380 @@
+/*
+ * "Your puppy journey": three steps on the left, a WhatsApp phone on the right.
+ * On desktop the phone column is `position: sticky`, so it stays on screen while the
+ * (tall) steps scroll past; each step that is reached sends a message into the chat.
+ */
+
+.chat {
+  padding-block: clamp(4.5rem, 10vh, 7rem) clamp(4rem, 9vh, 6rem);
+  background: linear-gradient(#f7d18d, #f0b866);
+}
+
+.chat-grid {
+  display: grid;
+  gap: 3.5rem;
+}
+
+.chat-steps {
+  display: grid;
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+  list-style: none;
+}
+.chat-step {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr;
+  column-gap: 1.1rem;
+  align-content: start;
+}
+.chat-num {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-size: 1.75rem;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 50%;
+  transition:
+    background-color 0.4s,
+    color 0.4s,
+    scale 0.5s var(--ease-pounce);
+}
+.chat-step[data-active] .chat-num {
+  color: var(--color-milk);
+  background: var(--color-toffee-deep);
+  scale: 1.1;
+}
+.chat-title {
+  font-size: clamp(1.6rem, 2.3vw, 2.3rem);
+  line-height: 1.05;
+}
+.chat-text {
+  max-width: 40ch;
+  margin-top: 0.45rem;
+  color: var(--ink-soft);
+}
+.chat-cta {
+  margin-top: 2rem;
+}
+
+.chat-side {
+  position: relative;
+  padding-bottom: clamp(5.5rem, 22vw, 7rem);
+}
+.chat-teddy {
+  position: absolute;
+  bottom: -0.6rem;
+  left: max(0rem, 50% - 12rem);
+  width: clamp(7.5rem, 26vw, 9rem);
+  aspect-ratio: 300 / 240;
+}
+
+/* ── The phone ───────────────────────────────────────────────────── */
+.phone {
+  position: relative;
+  width: min(100%, 23rem);
+  padding: 0.55rem;
+  margin-inline: auto;
+  background: var(--color-cocoa);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 2.7rem;
+  box-shadow: 12px 16px #2a170e29;
+  rotate: 1.5deg;
+}
+.phone-bar {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.65rem 0.9rem;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border-radius: 2.1rem 2.1rem 0.5rem 0.5rem;
+}
+.phone-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+.phone-name {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.phone-status {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--color-cocoa-soft);
+}
+.phone-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  height: clamp(23rem, 54vh, 32rem);
+  padding: 0.9rem 0.65rem;
+  margin-top: 0.3rem;
+  overflow: hidden;
+  background:
+    url("/pattern/paw.svg") 0 0 / 46px 46px,
+    #fbecd2;
+  border-radius: 0.5rem;
+}
+
+.msg {
+  max-width: 86%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.38;
+  color: var(--color-cocoa);
+  border: 2px solid var(--color-cocoa);
+  border-radius: 1.05rem;
+}
+.msg--me {
+  align-self: flex-end;
+  background: var(--color-honey);
+  border-bottom-right-radius: 0.25rem;
+}
+.msg--them {
+  align-self: flex-start;
+  background: var(--color-milk);
+  border-bottom-left-radius: 0.25rem;
+}
+.msg--media {
+  padding: 0.3rem;
+}
+.msg-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.msg-group[data-show="false"] {
+  display: none;
+}
+.msg-group > * {
+  animation: msg-in 0.5s var(--ease-pounce) both;
+}
+.msg-group > :nth-child(2) {
+  animation-delay: 0.18s;
+}
+.msg-group > :nth-child(3) {
+  animation-delay: 0.36s;
+}
+@keyframes msg-in {
+  0% {
+    opacity: 0;
+    translate: 0 0.8rem;
+    scale: 0.92;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  list-style: none;
+}
+.chips a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-decoration: none;
+  background: var(--color-honey-soft);
+  border: 1.5px solid var(--color-cocoa);
+  border-radius: 999px;
+}
+.chips a:hover {
+  background: var(--color-honey);
+}
+
+.snaps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  width: 11.5rem;
+}
+.snaps-one {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 0.65rem;
+}
+.clip {
+  position: relative;
+  width: 9rem;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-cocoa);
+  border-radius: 0.8rem;
+}
+.clip video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+.clip-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  background: #fffdf8eb;
+  border: 2px solid var(--color-cocoa);
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+.clip-play svg {
+  width: 1.3rem;
+  fill: var(--color-cocoa);
+}
+.clip-play[aria-pressed="true"] {
+  inset: auto 0.4rem 0.4rem auto;
+  width: 2.2rem;
+  height: 2.2rem;
+  translate: none;
+}
+
+.route {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+}
+.route-line {
+  fill: none;
+  stroke: var(--color-toffee-deep);
+  stroke-width: 2.5px;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+.route-dot {
+  fill: var(--color-toffee-deep);
+}
+.route-home {
+  fill: var(--color-honey);
+  stroke: var(--color-cocoa);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+}
+.route-heart {
+  fill: var(--color-toffee-deep);
+}
+.route-paw {
+  fill: var(--color-toffee);
+  opacity: 0.6;
+}
+
+.typing {
+  display: none;
+  gap: 0.3rem;
+  align-self: flex-start;
+  padding: 0.7rem 0.85rem;
+  background: var(--color-milk);
+  border: 2px solid var(--color-cocoa);
+  border-radius: 1.05rem 1.05rem 1.05rem 0.25rem;
+}
+.typing[data-show="true"] {
+  display: inline-flex;
+}
+.typing span {
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--color-cocoa);
+  border-radius: 50%;
+  animation: typing-dot 0.9s ease-in-out infinite;
+}
+.typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes typing-dot {
+  0%,
+  60%,
+  100% {
+    translate: 0;
+  }
+  30% {
+    translate: 0 -0.35rem;
+  }
+}
+
+.phone-compose {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.45rem 0.45rem 1rem;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-cocoa-soft);
+  text-decoration: none;
+  background: var(--color-milk);
+  border-radius: 0.5rem 0.5rem 2.1rem 2.1rem;
+}
+.phone-compose svg {
+  flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0.55rem;
+  fill: #fff;
+  background: var(--color-whatsapp);
+  border-radius: 50%;
+}
+.phone-compose:hover {
+  color: var(--color-cocoa);
+}
+
+/* ── Desktop: sticky phone beside tall, dimmed steps ─────────────── */
+@media (min-width: 1024px) {
+  .chat-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+    column-gap: clamp(3rem, 8vw, 9rem);
+  }
+  .chat-steps {
+    gap: 0;
+  }
+  .chat-step {
+    min-height: 44vh;
+    opacity: 0.4;
+    transition: opacity 0.5s;
+  }
+  .chat-step:last-child {
+    min-height: 40vh;
+  }
+  .chat-step:is([data-active], [data-done]) {
+    opacity: 1;
+  }
+  .chat-side {
+    position: sticky;
+    top: calc(var(--header-h) + 5vh);
+    align-self: start;
+    padding-bottom: 0;
+  }
+  .chat-teddy {
+    bottom: -1.6rem;
+    left: -8.5rem;
+    width: 11rem;
+  }
+}
+
+/* Phones: Teddy lives in the bottom corner lane (pup-layer.tsx), so these anchors take no room. */
+@media (max-width: 767px) {
+  .chat-side {
+    padding-bottom: 0;
+  }
+  .chat-teddy {
+    display: none;
+  }
+}

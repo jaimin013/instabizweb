@@ -1,0 +1,333 @@
+/*
+ * "Meet the pups": a hall of doors. Two layouts share the same markup:
+ *   - default / reduced motion: a plain responsive grid, every door open
+ *   - [data-pinned]: a sticky stage with a horizontally sliding track (see meet-the-pups.tsx)
+ */
+
+.meet {
+  position: relative;
+  background: linear-gradient(var(--color-cream), var(--color-honey-soft));
+}
+
+.meet-stage {
+  position: relative;
+  padding-top: clamp(4rem, 9vh, 7rem);
+  padding-bottom: clamp(3rem, 7vh, 5rem);
+}
+
+.meet-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 110rem;
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+}
+
+.meet-hall {
+  --floor-h: clamp(5rem, 13vh, 8rem);
+  position: relative;
+  margin-top: clamp(2rem, 5vh, 3.5rem);
+}
+
+.meet-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(10.5rem, 42vw), 1fr));
+  gap: 2.75rem 1.25rem;
+  max-width: 110rem;
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .meet-track {
+    gap: 3.5rem 2rem;
+  }
+}
+
+.meet-floor {
+  display: none;
+}
+
+.meet-teddy {
+  position: absolute;
+  top: clamp(-9.5rem, -20vw, -6rem);
+  right: var(--gutter);
+  z-index: 5;
+  width: clamp(8rem, 26vw, 11rem);
+  aspect-ratio: 300 / 240; /* an empty box that marks where the roaming dog stands */
+  pointer-events: none;
+}
+
+/* ── Pinned (md and up): sticky stage + sliding track. Phones keep the plain grid above. ── */
+@media (min-width: 768px) {
+  .meet[data-pinned] {
+    /* Replaced with the exact value once the track has been measured. */
+    height: var(--pin-fallback);
+  }
+
+  .meet[data-pinned] .meet-stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+    padding-top: calc(var(--header-h) + clamp(1rem, 3vh, 2.5rem));
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .meet[data-pinned] .meet-hall {
+    flex: 1;
+  }
+
+  .meet[data-pinned] .meet-track {
+    position: absolute;
+    bottom: var(--floor-h);
+    left: 0;
+    display: flex;
+    gap: clamp(4.5rem, 6vw, 7rem);
+    align-items: flex-end;
+    width: max-content;
+    max-width: none;
+    padding-inline: 38vw 12vw;
+    will-change: transform;
+  }
+  .meet[data-pinned] .door {
+    width: var(--door-w, clamp(8rem, min(15vw, 25vh), 16rem));
+  }
+  .meet[data-pinned] :is(.door-name, .door-meta) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .meet[data-pinned] .door-name {
+    -webkit-line-clamp: 3;
+  }
+
+  /* Wooden floor; plank seams slide with the track via --floor-x. */
+  .meet[data-pinned] .meet-floor {
+    position: absolute;
+    inset: auto 0 0;
+    display: block;
+    height: var(--floor-h);
+    background:
+      linear-gradient(to bottom, #2a170e29, transparent 22%),
+      repeating-linear-gradient(90deg, transparent 0 calc(11rem - 2px), #2a170e1f calc(11rem - 2px) 11rem)
+        var(--floor-x, 0) 0 / auto,
+      linear-gradient(#e8b06a, #dc9a52);
+    border-top: 3px solid var(--color-cocoa);
+    box-shadow: 0 -12px 0 -6px #f5d9a8;
+  }
+
+  .meet[data-pinned] .meet-teddy {
+    top: auto;
+    bottom: calc(var(--floor-h) * 0.42);
+    left: 14vw;
+    right: auto;
+    width: clamp(11rem, min(14vw, 24vh), 14rem);
+  }
+}
+
+/* ── Doors ───────────────────────────────────────────────────────── */
+.door {
+  position: relative;
+  list-style: none;
+}
+.door-link {
+  display: block;
+  border-radius: 1rem;
+  text-decoration: none;
+}
+.door-plate {
+  display: block;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+.door-name {
+  display: block;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.door-meta {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.door-frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5.2;
+  background: #3b2215;
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+}
+/* Little doorstep, only in the grid layout (the pinned floor replaces it). */
+.door-frame::after {
+  position: absolute;
+  right: -0.55rem;
+  bottom: -0.6rem;
+  left: -0.55rem;
+  height: 0.6rem;
+  content: "";
+  background: #dc9a52;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.35rem;
+}
+@media (min-width: 768px) {
+  .meet[data-pinned] .door-frame::after {
+    display: none;
+  }
+}
+
+/* The doorway clips the swinging leaf to the arch and gives it 3D depth. */
+.door-way {
+  --door-open: 78deg;
+  position: absolute;
+  inset: -3px -3px 0;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  perspective: 700px;
+  perspective-origin: 0;
+}
+.door-room {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.door-room img {
+  transition: scale 0.45s var(--ease-silk);
+}
+
+.door-leaf {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(25% - 1.5px), #2a170e2e calc(25% - 1.5px) 25%),
+    var(--door);
+  border: 3px solid var(--color-cocoa);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  transition: transform 1.05s cubic-bezier(0.3, 1.32, 0.48, 1) 50ms;
+  transform-origin: 0;
+}
+/* Inner panel outline */
+.door-leaf::before {
+  position: absolute;
+  inset: 12% 14% 9%;
+  content: "";
+  border: 2.5px solid #fffdf847;
+  border-radius: 999px 999px 0.5rem 0.5rem;
+}
+.door-peephole {
+  position: absolute;
+  top: 19%;
+  left: 50%;
+  width: 22%;
+  color: #fffdf873;
+  translate: -50%;
+}
+.door-knob {
+  position: absolute;
+  top: 56%;
+  right: 11%;
+  width: 0.85rem;
+  aspect-ratio: 1;
+  background: var(--color-honey);
+  border: 2.5px solid var(--color-cocoa);
+  border-radius: 50%;
+}
+
+/* In the grid layout (phones) each door swings open as it scrolls into view. */
+@keyframes door-open {
+  from {
+    transform: rotateY(0);
+  }
+  to {
+    transform: rotateY(var(--door-open));
+  }
+}
+@supports (animation-timeline: view()) {
+  .door-leaf {
+    animation: door-open linear both;
+    animation-timeline: view();
+    animation-range: entry 55% cover 48%;
+  }
+  @media (min-width: 768px) {
+    .meet[data-pinned] .door-leaf {
+      animation: none;
+    }
+  }
+}
+
+.door[data-open="true"] .door-leaf,
+.door-link:is(:hover, :focus-visible) .door-leaf {
+  transform: rotateY(var(--door-open));
+}
+.door[data-open="true"] .door-room img {
+  scale: 1.04;
+}
+.door-link:is(:hover, :focus-visible) .door-name {
+  color: var(--color-toffee-deep);
+}
+
+.door-tag {
+  position: absolute;
+  top: 21%;
+  right: -0.7rem;
+  z-index: 2;
+  padding: 0.05rem 0.65rem 0.15rem;
+  font-size: 0.9rem;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 2px solid var(--color-cocoa);
+  border-radius: 999px;
+  box-shadow: 2px 3px #2a170e33;
+  rotate: 7deg;
+}
+
+/* "Meet them all": a dashed, empty doorway that links to the full list. */
+.door--all {
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+}
+.door--all .door-link {
+  width: 100%;
+}
+.door-frame--all {
+  display: grid;
+  place-items: center;
+  background: none;
+  border-style: dashed;
+}
+.door-frame--all::after {
+  display: none;
+}
+.door-all {
+  padding: 1rem;
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  line-height: 1;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-color: var(--color-toffee);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .door-leaf {
+    animation: none;
+    transform: rotateY(var(--door-open)) !important;
+  }
+}

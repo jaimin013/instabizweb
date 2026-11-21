@@ -32,7 +32,7 @@ export type ActorState =
   | { kind: "hold"; stop: Stop; at: Transform }
   | { kind: "travel"; from: Stop; to: Stop; p: number; at: Transform };
 
-export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 export const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 export const smoothstep = (t: number) => t * t * (3 - 2 * t);
 export const easeOutQuad = (t: number) => 1 - (1 - t) * (1 - t);

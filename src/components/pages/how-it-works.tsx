@@ -135,7 +135,7 @@ const SKYLINE =
   "M0 100H300M24 100V70H46V100M54 100V56H70V100M92 100V50L98 22L101 6L104 22L110 50V100M122 100V54L146 46V100M156 100V38H178V100M188 100V66H210V100M220 100V72H246V100M254 100V84H282V100";
 
 /** The two-tab "Two ways home" explainer. Arrow keys move between tabs, like a native tablist. */
-export function Journeys() {
+function Journeys() {
   const [at, setAt] = useState(0);
   const root = useRef<HTMLElement>(null);
   // Step cards only animate in once the page is interactive, so there is no flash before hydration.
@@ -328,7 +328,7 @@ const stampIcons = {
 } as const;
 
 /** The long-form part of /how-it-works below the switch: promise, delivery, why us, care. */
-export function HowTail() {
+function HowTail() {
   return (
     <>
       <section id="promise" aria-labelledby="promise-title" className="paper mt-24 -rotate-[0.6deg]">

@@ -8,7 +8,7 @@ import { whatsappLink } from "@/lib/site";
 
 const bySlug = new Map(pups.map((p) => [p.slug, p]));
 
-export const availablePups = pups.filter((p) => p.status === "available");
+const availablePups = pups.filter((p) => p.status === "available");
 export const gonePups = pups.filter((p) => p.status === "gone");
 
 export const getPup = (slug: string): Pup | undefined => bySlug.get(slug);
@@ -24,7 +24,7 @@ export function neighbours(pup: Pup) {
 }
 
 /** "Max" for a named puppy, "this Shih Tzu" for one without a name. */
-export const subject = (pup: Pup) => (pup.named ? pup.name : `this ${pup.name}`);
+const subject = (pup: Pup) => (pup.named ? pup.name : `this ${pup.name}`);
 
 export function pupCopy(pup: Pup) {
   const gone = pup.status === "gone";

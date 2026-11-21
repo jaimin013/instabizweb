@@ -19,7 +19,7 @@ const variants = {
   ghost: "border-2 border-line bg-transparent text-ink hover:bg-ink hover:text-surface",
 } as const;
 
-export type ButtonVariant = keyof typeof variants;
+type ButtonVariant = keyof typeof variants;
 
 type ButtonLinkProps = ComponentProps<typeof Link> & { variant?: ButtonVariant };
 

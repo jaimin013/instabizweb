@@ -11,6 +11,15 @@
 | Scope          | 93 source files, 448 functions, 15,654 LOC (TypeScript, TSX and CSS), zero-config defaults                          |
 | Status of repo | no commits yet, so fallow **skipped hotspot (churn) analysis**                                                      |
 
+## Cleanup progress
+
+| Step | What                                                                                            | Result                                                                                                                                |
+| ---- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Deleted `page-stub.tsx`; stopped exporting 8 exports / 2 types used only inside their own files | Dead code **0** (fallow dead-code: "no issues found"). Typecheck, lint, 16 tests and the build pass.                                  |
+| 1    | `@tailwindcss/turbopack` flagged as unused: **false positive, kept**                            | `next.config.ts` names it as a Turbopack CSS loader (a string fallow cannot follow). Now listed in `.fallowrc.jsonc` with the reason. |
+
+The "Raw output" below is the **original baseline** (before step 1); it is kept as a record to compare against.
+
 ## Re-run it
 
 ```bash

@@ -403,7 +403,7 @@ Chrome** instead of eyeballing.
 
 > On mobile, tapping a menu link or changing page does not show the preloader, and I have to tap Close after the page changes. Add the transition there, observe the real one carefully and replicate it a bit more.
 
-**Cause.** The mobile menu is a native modal `<dialog>`, which lives in the browser's top layer, above everything. My curtain catches link clicks at the document and stops them, so the menu link's own handler, the thing that closes the menu, never ran. The menu stayed open on top, the curtain slid up *behind* it, and the page changed unseen.
+**Cause.** The mobile menu is a native modal `<dialog>`, which lives in the browser's top layer, above everything. My curtain catches link clicks at the document and stops them, so the menu link's own handler, the thing that closes the menu, never ran. The menu stayed open on top, the curtain slid up _behind_ it, and the page changed unseen.
 
 **Fix.** When the tapped link is inside an open dialog, the curtain closes it first, exactly as the original does (it is shut within 5 ms of the tap). Recording both sites on a touch phone, tap to finish: original covering at 100 ms / covered 407 / lifting 550 / idle 1000; mine 101 / 402 / 573 / 1050. I had held the cover about 300 ms longer than the original, so the minimum cover time dropped from 760 to 450 ms.
 
@@ -420,3 +420,13 @@ Chrome** instead of eyeballing.
 Ran `npx --yes fallow` (v3.45.0, nothing added to `package.json`): dead code, duplication and health together, plus the architecture check. Wrote everything to `FALLOW-REPORT.md`: the raw output, a triage of what is real, a cross-check from code-review-graph (largest files and functions, hub nodes, untested hotspots) and a suggested cleanup order. Added `/.fallow/` (the tool's cache) to `.gitignore`. No code was changed.
 
 Headline: 0 circular dependencies, architecture clean, maintainability 92.7 / 100, duplication 0.7 %, dead code 6.8 % of exports (1 file, 8 exports, 2 types, 1 dev dependency). The one real refactor target, by both fallow and the graph, is `pup-layer.tsx` (`tick`, cyclomatic 40).
+
+---
+
+## Prompt 20 — Start the cleanup, committing in sequence
+
+> Yes, start the cleanup, and start by committing in sequence.
+
+Committed the whole project as eight commits in build order: scaffold; design system; layout; mascot; home; pages; interactions; docs. The tool folders (`.claude`, `.gemini`, `.github`, `.vscode`, `.mcp.json`) are left out.
+
+Cleanup step 1 (quick wins from `FALLOW-REPORT.md`): deleted the unused `page-stub.tsx`; stopped exporting the symbols only used inside their own files. Fallow's "unused" dev dependency `@tailwindcss/turbopack` is a **false positive**: `next.config.ts` uses it by name as the Turbopack CSS loader, so it stays and is recorded in `.fallowrc.jsonc` with the reason. Dead code is now 0.

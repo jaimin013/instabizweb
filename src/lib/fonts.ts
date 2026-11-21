@@ -10,14 +10,14 @@ import { Figtree, Fraunces, Shantell_Sans } from "next/font/google";
  */
 
 /** Body copy, nav, buttons. */
-export const figtree = Figtree({
+const figtree = Figtree({
   subsets: ["latin"],
   variable: "--font-figtree-var",
   display: "swap",
 });
 
 /** Display headings. Extra axes power the soft / wonky letterforms. */
-export const fraunces = Fraunces({
+const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces-var",
   display: "swap",
@@ -25,7 +25,7 @@ export const fraunces = Fraunces({
 });
 
 /** Handwritten notes ("every puppy is family"). */
-export const shantell = Shantell_Sans({
+const shantell = Shantell_Sans({
   subsets: ["latin"],
   variable: "--font-shantell-var",
   display: "swap",

@@ -33,7 +33,7 @@ const EAR_PIVOT = { l: [48, 98], r: [192, 98] } as const;
 export const HEAD_AT = { x: 194, y: 98 } as const;
 const HEAD_SIT = { x: 172, y: 76 } as const;
 
-export type LegName = "bf" | "ff" | "bn" | "fn";
+type LegName = "bf" | "ff" | "bn" | "fn";
 
 /** Hip joint for each leg when standing / sitting. */
 const HIP = {

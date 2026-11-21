@@ -1,0 +1,7 @@
+{
+  // Fallow settings for this project. Keep each exception explained.
+  //
+  // @tailwindcss/turbopack is not imported anywhere: next.config.ts names it as a Turbopack CSS loader
+  // (turbopack.rules["*.css"].loaders), a string reference fallow cannot follow. Removing it breaks Tailwind.
+  "ignoreDependencies": ["@tailwindcss/turbopack"],
+}

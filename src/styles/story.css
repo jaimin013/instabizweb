@@ -1,0 +1,309 @@
+/*
+ * A puppy's page, "the storybook" (/puppies/[slug]): ribbon bookmark, chapter numbers, a stacked-page
+ * photo frame, a hanging name tag, a paper checklist, a paw-print trail and a letter to the team.
+ */
+
+.tp-storybook {
+  position: relative;
+}
+
+/* Bookmark ribbon (desktop): sticks while reading; the band grows with progress */
+.tp-ribbon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: max(0.3rem, calc(var(--gutter) * 0.5 - 0.6rem));
+  z-index: 2;
+  width: 1.2rem;
+  pointer-events: none;
+}
+.tp-ribbon__track {
+  position: sticky;
+  top: calc(var(--header-h) + 1.4rem);
+  height: calc(100vh - var(--header-h) - 4.4rem);
+}
+.tp-ribbon__track::before {
+  position: absolute;
+  inset: -0.6rem 0 auto;
+  height: 0.6rem;
+  content: "";
+  background: linear-gradient(90deg, #8e3f15, #c2622b 45%, #a24a1a);
+  border-radius: 0.6rem 0.6rem 0 0;
+}
+.tp-ribbon__band {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #8e3f15, #c2622b 45%, #a24a1a);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.75rem), 0 100%);
+  transform-origin: 50% 0;
+}
+@media (max-width: 1023px) {
+  .tp-ribbon {
+    display: none;
+  }
+}
+
+/* Chapter markers: a wobbly numbered ring + handwritten title */
+.tp-chapter {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  font-size: 1.15rem;
+  color: var(--color-toffee-ink);
+}
+.tp-chapter__n {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.3rem;
+  aspect-ratio: 1;
+  font-size: 1.15rem;
+  line-height: 1;
+  border: 2.5px solid;
+  border-radius: 52% 46% 50% 48%;
+  rotate: -6deg;
+}
+
+/* Photo "page": a stack of pages peeking out behind */
+.tp-storypage {
+  overflow: hidden;
+  background: var(--color-honey-soft);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.2rem;
+  box-shadow:
+    7px 7px 0 -2px var(--color-milk),
+    7px 7px 0 1px var(--color-cocoa),
+    14px 14px 0 -2px var(--color-milk),
+    14px 14px 0 1px var(--color-cocoa);
+}
+.tp-turn {
+  transform-origin: 0% 50%;
+  animation: tp-page-turn 0.55s var(--ease-silk) both;
+}
+@keyframes tp-page-turn {
+  from {
+    clip-path: inset(0 0 0 100%);
+    transform: translateX(6%);
+  }
+  to {
+    clip-path: inset(0);
+    transform: none;
+  }
+}
+
+/* The name tag: swings on its ring when it arrives */
+.tp-board {
+  position: relative;
+  padding: clamp(1.1rem, 2.6vw, 1.75rem);
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.6rem;
+  box-shadow: 6px 8px #2a170e24;
+}
+.tp-board::before {
+  position: absolute;
+  inset: 7px;
+  pointer-events: none;
+  content: "";
+  border: 1.5px dashed #2a170e38;
+  border-radius: 1.2rem;
+}
+.tp-tag {
+  transform-origin: 2.6rem -0.6rem;
+}
+.tp-tag__ring {
+  position: absolute;
+  top: -1.2rem;
+  left: 1.5rem;
+  z-index: 1;
+  width: 2.2rem;
+  aspect-ratio: 1;
+  background: radial-gradient(circle, transparent 0 0.55rem, var(--color-honey) 0.6rem);
+  border: 3.5px solid var(--color-cocoa);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px #ffffff80;
+}
+.tp-tag[data-armed]:not([data-revealed]) {
+  opacity: 0;
+  rotate: calc(-8deg * var(--swing, 1));
+}
+@media (max-width: 1023px) {
+  .tp-tag {
+    --swing: 0.25;
+  }
+}
+.tp-tag[data-revealed] {
+  animation: tp-tag-swing 1.7s var(--ease-silk) both;
+}
+@media (hover: hover) {
+  .tp-tag[data-revealed]:hover {
+    animation: tp-tag-nudge 1.3s var(--ease-silk);
+  }
+}
+@keyframes tp-tag-swing {
+  0% {
+    rotate: calc(-7deg * var(--swing, 1));
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  30% {
+    rotate: calc(4deg * var(--swing, 1));
+  }
+  50% {
+    rotate: calc(-2.2deg * var(--swing, 1));
+  }
+  70% {
+    rotate: calc(1deg * var(--swing, 1));
+  }
+  86% {
+    rotate: calc(-0.4deg * var(--swing, 1));
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+@keyframes tp-tag-nudge {
+  25% {
+    rotate: calc(1.6deg * var(--swing, 1));
+  }
+  55% {
+    rotate: calc(-0.9deg * var(--swing, 1));
+  }
+  80% {
+    rotate: calc(0.3deg * var(--swing, 1));
+  }
+}
+
+/* Teddy on the tag, with his speech bubble */
+.pup-buddy {
+  position: relative;
+  pointer-events: none;
+}
+.pup-bubble {
+  position: absolute;
+  bottom: 84%;
+  left: 72%;
+  padding: 0.3rem 0.85rem 0.35rem;
+  font-family: var(--font-hand);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--color-cocoa);
+  white-space: nowrap;
+  background: var(--color-milk);
+  border: 2.5px solid var(--color-cocoa);
+  border-radius: 1.1rem 1.1rem 1.1rem 0.25rem;
+  box-shadow: 2px 3px #2a170e2e;
+  opacity: 0;
+  translate: -50%;
+  scale: 0.4;
+  transform-origin: 30% 100%;
+  transition:
+    scale 0.4s var(--ease-pounce),
+    opacity 0.18s ease-out;
+}
+.pup-bubble[data-show="true"] {
+  opacity: 1;
+  scale: 1;
+}
+
+/* Paper checklist */
+.tp-paper {
+  position: relative;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  color: var(--color-cocoa);
+  background:
+    radial-gradient(circle at 0 0, #0000 0 17px, #c2622b14 17px 18.5px, #0000 18.5px) 0 0 / 36px 36px,
+    radial-gradient(circle at 18px 18px, #0000 0 17px, #c2622b0f 17px 18.5px, #0000 18.5px) 0 0 / 36px 36px,
+    #fff8ea;
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.4rem;
+}
+
+/* The way home: numbered steps joined by a paw-print trail */
+.tp-trail {
+  display: grid;
+  gap: 2rem;
+}
+.tp-trail > li {
+  position: relative;
+  padding-left: 4.5rem;
+}
+.tp-trail > li:not(:last-child)::before {
+  position: absolute;
+  top: 3.9rem;
+  bottom: -1.6rem;
+  left: 1.6rem;
+  content: "";
+  border-left: 3px dotted color-mix(in oklab, currentColor 40%, transparent);
+}
+.tp-trail__num {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-size: 1.75rem;
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 50%;
+}
+.tp-trail--paws > li:not(:last-child)::before {
+  left: 1.15rem;
+  width: 1.1rem;
+  background: var(--color-toffee);
+  border: 0;
+  opacity: 0.55;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23000' d='M32 31c-7.4 0-15 8-15 15 0 5.2 4 8 8.8 8 2.6 0 4.6-1.1 6.2-1.1s3.6 1.1 6.2 1.1c4.8 0 8.8-2.8 8.8-8 0-7-7.6-15-15-15z'/%3E%3Cellipse cx='14.6' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3Cellipse cx='24.2' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='39.8' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='49.4' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3C/svg%3E")
+    center top / 1.1rem 2.2rem repeat-y;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23000' d='M32 31c-7.4 0-15 8-15 15 0 5.2 4 8 8.8 8 2.6 0 4.6-1.1 6.2-1.1s3.6 1.1 6.2 1.1c4.8 0 8.8-2.8 8.8-8 0-7-7.6-15-15-15z'/%3E%3Cellipse cx='14.6' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3Cellipse cx='24.2' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='39.8' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='49.4' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3C/svg%3E")
+    center top / 1.1rem 2.2rem repeat-y;
+}
+@media (min-width: 1024px) {
+  .tp-trail--row {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+  .tp-trail--row > li {
+    padding-top: 4.6rem;
+    padding-left: 0;
+  }
+  .tp-trail--row > li:not(:last-child)::before {
+    inset: 1.6rem -2.1rem auto 4.1rem;
+    border-top: 3px dotted color-mix(in oklab, currentColor 40%, transparent);
+    border-left: 0;
+  }
+  .tp-trail--row.tp-trail--paws > li:not(:last-child)::before {
+    inset: 1.1rem -2.1rem auto 4.1rem;
+    width: auto;
+    height: 1.1rem;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23000' d='M32 31c-7.4 0-15 8-15 15 0 5.2 4 8 8.8 8 2.6 0 4.6-1.1 6.2-1.1s3.6 1.1 6.2 1.1c4.8 0 8.8-2.8 8.8-8 0-7-7.6-15-15-15z'/%3E%3Cellipse cx='14.6' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3Cellipse cx='24.2' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='39.8' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='49.4' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3C/svg%3E")
+      left center / 2.2rem 1.1rem repeat-x;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23000' d='M32 31c-7.4 0-15 8-15 15 0 5.2 4 8 8.8 8 2.6 0 4.6-1.1 6.2-1.1s3.6 1.1 6.2 1.1c4.8 0 8.8-2.8 8.8-8 0-7-7.6-15-15-15z'/%3E%3Cellipse cx='14.6' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3Cellipse cx='24.2' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='39.8' cy='16.6' rx='5' ry='6.6' fill='%23000'/%3E%3Cellipse cx='49.4' cy='29.2' rx='4.6' ry='6' fill='%23000'/%3E%3C/svg%3E")
+      left center / 2.2rem 1.1rem repeat-x;
+  }
+}
+
+/* The letter at the foot of the page */
+.tp-letter {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  color: var(--color-cocoa);
+  background: var(--color-milk);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.6rem;
+  box-shadow: 8px 10px #2a170e29;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-turn {
+    animation: none;
+  }
+}

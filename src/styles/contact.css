@@ -1,0 +1,339 @@
+/*
+ * /contact — the enquiry is a letter. Blanks are inputs with dashed underlines; sending folds the
+ * letter into an envelope and drops it in a post box. Also the scene backdrop (.tp-scene),
+ * the Downtown Dubai visit card and the underlined contact links.
+ */
+
+.tp-scene {
+  position: relative;
+  color: var(--color-cocoa);
+  background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+}
+
+.link-ink {
+  color: var(--color-toffee-ink);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-toffee) 55%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+.link-ink:hover {
+  text-decoration-color: currentColor;
+}
+
+.tp-post {
+  position: relative;
+}
+.tp-post[data-phase="sealing"],
+.tp-post[data-phase="posting"] {
+  overflow: clip;
+}
+
+.tp-letterform {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  color: var(--color-cocoa);
+  /* a faint red margin line, like a school exercise book */
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 calc(clamp(1.5rem, 4vw, 2.75rem) - 0.9rem),
+      #c2622b47 calc(clamp(1.5rem, 4vw, 2.75rem) - 0.9rem) calc(clamp(1.5rem, 4vw, 2.75rem) - 0.75rem),
+      transparent 0
+    ),
+    var(--color-milk);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.6rem;
+  box-shadow: 8px 10px #2a170e29;
+  transform-origin: 50% 0;
+}
+.tp-letter__stamp {
+  position: absolute;
+  top: -1.25rem;
+  right: 2rem;
+  display: grid;
+  place-items: center;
+  width: 4.75rem;
+  aspect-ratio: 1;
+  color: var(--color-toffee-deep);
+  background: var(--color-honey-soft);
+  border: 3px dashed var(--color-toffee-deep);
+  border-radius: 0.5rem;
+  rotate: 6deg;
+}
+.tp-letterform__greeting {
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  color: var(--color-toffee-ink);
+}
+.tp-letterform__line {
+  margin-top: 0.9rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  line-height: 2.55;
+}
+
+.tp-blank {
+  display: inline-block;
+  width: min(var(--size), 100%);
+  vertical-align: baseline;
+}
+.tp-blank :is(input, select) {
+  width: 100%;
+  height: 2.2rem;
+  padding: 0 0.25rem;
+  font-family: var(--font-hand);
+  font-size: 1.12rem;
+  color: var(--color-toffee-ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 2.5px dashed #2a170e73;
+  border-radius: 0.3rem 0.3rem 0 0;
+  outline: none;
+  transition:
+    background-color 0.25s,
+    border-color 0.25s;
+}
+.tp-blank--select {
+  width: min(20ch, 100%);
+}
+.tp-blank select {
+  padding-right: 1.4rem;
+  text-overflow: ellipsis;
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--color-toffee-deep) 50%) right 0.55rem center / 0.45rem
+      0.45rem no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--color-toffee-deep) 50%) right 0.2rem center / 0.45rem
+      0.45rem no-repeat;
+}
+.tp-blank :is(input, select)::placeholder {
+  color: #5a3a2880;
+}
+.tp-blank :is(input, select):focus-visible {
+  background-color: #fbe3b499;
+  border-bottom-style: solid;
+  border-bottom-color: var(--color-toffee-deep);
+}
+.tp-blank :is(input, select)[aria-invalid="true"] {
+  background-color: #f9cdbf73;
+  border-bottom: 2.5px solid #b3261e;
+}
+/* select keeps its arrow when focused */
+.tp-blank select:focus-visible {
+  background:
+    linear-gradient(45deg, transparent 50%, var(--color-toffee-deep) 50%) right 0.55rem center / 0.45rem
+      0.45rem no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--color-toffee-deep) 50%) right 0.2rem center / 0.45rem
+      0.45rem no-repeat,
+    #fbe3b499;
+}
+
+.tp-letterform__note {
+  display: block;
+  width: 100%;
+  margin-top: 1.1rem;
+  padding: 0 0.25rem;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  line-height: 2.3rem;
+  color: var(--color-toffee-ink);
+  resize: vertical;
+  outline: none;
+  background: repeating-linear-gradient(#0000 0 calc(2.3rem - 2px), #2a170e29 calc(2.3rem - 2px) 2.3rem) local;
+  border: 0;
+}
+.tp-letterform__note::placeholder {
+  color: #5a3a2880;
+}
+.tp-letterform__note:focus-visible {
+  background-color: #fbe3b459;
+  border-radius: 0.4rem;
+}
+.tp-letterform__alert {
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--color-blush);
+  border-radius: 1rem;
+}
+.tp-letterform__alert ul {
+  margin-top: 0.35rem;
+  padding-left: 1.1rem;
+  font-size: 0.95rem;
+  list-style: outside;
+}
+.tp-letterform__sign {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.6rem;
+}
+.tp-letterform__sign p {
+  font-size: 1.1rem;
+  color: var(--color-cocoa-soft);
+}
+
+/* Sending: fold, envelope, post box */
+.tp-post[data-phase="sealing"] .tp-letterform,
+.tp-post[data-phase="posting"] .tp-letterform {
+  animation: tp-letter-fold 0.65s var(--ease-snap) forwards;
+}
+.tp-post__scene {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  width: 14rem;
+  height: 26rem;
+  pointer-events: none;
+  translate: -50%;
+}
+.tp-post__envelope {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: 11rem;
+  translate: -50%;
+  animation: tp-env-in 0.45s 0.3s var(--ease-pounce) both;
+}
+.tp-post__flap {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: tp-flap 0.3s ease-in 0.55s both;
+}
+.tp-post[data-phase="posting"] .tp-post__envelope {
+  animation: tp-env-post 0.85s var(--ease-snap) forwards;
+}
+.tp-post__box {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 2;
+  width: 13rem;
+  translate: -50% 120%;
+}
+.tp-post[data-phase="posting"] .tp-post__box {
+  animation: tp-box-up 0.5s var(--ease-pounce) forwards;
+}
+.tp-post__flag {
+  transform-box: fill-box;
+  transform-origin: 0 100%;
+  rotate: 90deg;
+}
+.tp-post[data-phase="posting"] .tp-post__flag {
+  animation: tp-flag 0.4s 0.75s var(--ease-pounce) forwards;
+}
+.tp-post__sent {
+  padding: clamp(2rem, 5vw, 3rem) 1.5rem;
+  color: var(--color-cocoa);
+  text-align: center;
+  outline: none;
+  background: var(--color-honey);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.6rem;
+  box-shadow: 8px 10px #2a170e29;
+  animation: tp-sent-in 0.55s var(--ease-pounce) both;
+}
+.tp-post__box--sent {
+  width: 9rem;
+  margin-inline: auto;
+}
+.tp-post__box--sent .tp-post__flag {
+  rotate: 0deg;
+}
+
+@keyframes tp-env-in {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+@keyframes tp-env-post {
+  0% {
+    translate: -50%;
+    scale: 1;
+  }
+  35% {
+    translate: -50% -1.2rem;
+    scale: 0.92;
+  }
+  to {
+    translate: -50% 12.5rem;
+    scale: 0.55;
+  }
+}
+@keyframes tp-letter-fold {
+  55% {
+    opacity: 0.7;
+    transform: perspective(1100px) rotateX(62deg) scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(80deg) scale(0.35) translateY(30%);
+  }
+}
+@keyframes tp-flag {
+  to {
+    rotate: 0deg;
+  }
+}
+@keyframes tp-sent-in {
+  0% {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.96);
+  }
+}
+@keyframes tp-box-up {
+  to {
+    translate: -50%;
+  }
+}
+@keyframes tp-flap {
+  0% {
+    transform: scaleY(-1);
+  }
+}
+
+/* Visit card */
+.tp-shopfront {
+  position: relative;
+  overflow: hidden;
+  color: var(--color-cocoa);
+  background: linear-gradient(#fff1d8, #fbe3b4);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 1.2rem;
+}
+.tp-shopfront::before {
+  display: block;
+  height: 1.9rem;
+  content: "";
+  background: repeating-linear-gradient(90deg, var(--color-toffee) 0 1.4rem, var(--color-milk) 1.4rem 2.8rem);
+  border-bottom: 3px solid var(--color-cocoa);
+}
+.tp-visit {
+  display: grid;
+  gap: 1.25rem;
+}
+.tp-visit__photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-honey-soft);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 999px 999px 1rem 1rem;
+}
+@media (min-width: 640px) {
+  .tp-visit {
+    grid-template-columns: minmax(0, 1fr) 11rem;
+    align-items: end;
+  }
+  .tp-visit__photo {
+    aspect-ratio: 3 / 4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tp-post *,
+  .tp-post__sent {
+    animation: none !important;
+  }
+}

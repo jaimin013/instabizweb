@@ -1,0 +1,203 @@
+/*
+ * /gone-home: a ticket booth with Teddy behind the counter, and a cinema "admit one" ticket for every
+ * puppy who found a family. Tickets print in one by one (clip-path) and the stub tears on hover.
+ */
+
+.tp-boothhead {
+  display: grid;
+  gap: 2.5rem;
+  align-items: end;
+}
+@media (min-width: 768px) {
+  .tp-boothhead {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+.tp-booth {
+  --bw: clamp(11rem, 30vw, 15rem);
+  position: relative;
+  width: var(--bw);
+  justify-self: end;
+}
+.tp-booth__teddy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+.tp-booth__counter {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  height: calc(var(--bw) * 0.42);
+  margin-top: calc(var(--bw) * -0.272);
+  padding-top: 2rem;
+  background:
+    linear-gradient(var(--color-cocoa), var(--color-cocoa)) 0 2.05rem / 100% 3px no-repeat,
+    repeating-linear-gradient(90deg, var(--color-toffee) 0 1.3rem, var(--color-milk) 1.3rem 2.6rem) 0 0 / 100%
+      2.05rem no-repeat,
+    linear-gradient(#fff1d8, #fbe3b4);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 0.9rem 0.9rem 0.4rem 0.4rem;
+}
+.tp-booth__counter span {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--color-toffee-ink);
+}
+
+.tp-tickets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+  gap: 2.25rem 1.75rem;
+  margin-top: clamp(3rem, 7vw, 5rem);
+}
+.tp-ticket {
+  rotate: var(--tilt);
+  transition: rotate 0.45s var(--ease-pounce);
+}
+.tp-ticket:hover {
+  rotate: 0deg;
+}
+.tp-ticket__link {
+  position: relative;
+  display: flex;
+  min-height: 9.5rem;
+  border-radius: 1rem;
+  filter: drop-shadow(5px 7px #2a170e29);
+  transition:
+    translate 0.45s var(--ease-pounce),
+    filter 0.45s var(--ease-silk);
+}
+.tp-ticket__link:hover {
+  translate: 0 -4px;
+  filter: drop-shadow(8px 12px #2a170e2e);
+}
+.tp-ticket__main,
+.tp-ticket__stub {
+  position: relative;
+  background: #fff8ea;
+  border: 3px solid var(--color-cocoa);
+}
+/* Half-circle notches punched out where the stub joins */
+.tp-ticket__main {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.95rem 1rem 0.95rem 0.95rem;
+  border-right: 0;
+  border-radius: 1rem 0 0 1rem;
+  -webkit-mask:
+    radial-gradient(circle at 100% 0, #0000 0.62rem, #000 0.66rem) 100% 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 100% 100%, #0000 0.62rem, #000 0.66rem) 100% 100% / 51% 51% no-repeat,
+    linear-gradient(#000, #000) 0 / 50% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 100% 0, #0000 0.62rem, #000 0.66rem) 100% 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 100% 100%, #0000 0.62rem, #000 0.66rem) 100% 100% / 51% 51% no-repeat,
+    linear-gradient(#000, #000) 0 / 50% 100% no-repeat;
+}
+.tp-ticket__photo {
+  position: relative;
+  flex: none;
+  width: clamp(5.4rem, 22vw, 6.6rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-honey-soft);
+  border: 3px solid var(--color-cocoa);
+  border-radius: 50%;
+}
+.tp-ticket__body {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.tp-ticket__kicker {
+  font-size: 0.9rem;
+  color: var(--color-toffee-ink);
+}
+.tp-ticket__name {
+  overflow: hidden;
+  font-size: clamp(1.4rem, 2vw, 1.75rem);
+  line-height: 1.05;
+  text-overflow: ellipsis;
+}
+.tp-ticket__meta {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-cocoa-soft);
+}
+.tp-ticket__route {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-cocoa);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tp-ticket__route svg {
+  width: 2.6rem;
+  fill: none;
+  stroke: var(--color-toffee-deep);
+  stroke-width: 2.4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 3 4;
+}
+.tp-ticket__route svg path + path {
+  stroke-dasharray: none;
+}
+.tp-ticket__stub {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.4rem;
+  background: var(--color-honey);
+  border-left: 3px dashed #2a170e8c;
+  border-radius: 0 1rem 1rem 0;
+  transform-origin: 0 0;
+  transition: rotate 0.5s var(--ease-pounce);
+  -webkit-mask:
+    radial-gradient(circle at 0 0, #0000 0.62rem, #000 0.66rem) 0 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 0 100%, #0000 0.62rem, #000 0.66rem) 0 100% / 51% 51% no-repeat,
+    linear-gradient(#000, #000) 100% / 50% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 0 0, #0000 0.62rem, #000 0.66rem) 0 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 0 100%, #0000 0.62rem, #000 0.66rem) 0 100% / 51% 51% no-repeat,
+    linear-gradient(#000, #000) 100% / 50% 100% no-repeat;
+}
+.tp-ticket__stub span {
+  font-size: 1rem;
+  color: var(--color-cocoa);
+  letter-spacing: 0.06em;
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+}
+.tp-ticket__link:hover .tp-ticket__stub {
+  rotate: 7deg;
+}
+
+/* Printing in: each ticket slides out of the booth, one after another */
+.tp-ticket[data-armed]:not([data-revealed]) .tp-ticket__link {
+  translate: 0 -0.9rem;
+  clip-path: inset(0 0 100%);
+}
+.tp-ticket[data-armed] .tp-ticket__link {
+  transition:
+    clip-path 0.7s var(--ease-silk) calc(var(--i) * 80ms),
+    translate 0.7s var(--ease-silk) calc(var(--i) * 80ms),
+    filter 0.45s var(--ease-silk);
+}
+.tp-ticket[data-revealed] .tp-ticket__link {
+  clip-path: inset(-2rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tp-ticket,
+  .tp-ticket__link,
+  .tp-ticket__stub {
+    transition: none !important;
+  }
+}

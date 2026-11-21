@@ -1,0 +1,228 @@
+/*
+ * Page-change curtain (see components/layout/page-curtain.tsx for the state machine).
+ * A honey blanket with a diamond quilt pattern slides over the page; Teddy runs across it.
+ */
+
+.tp-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  overflow: clip;
+  visibility: hidden;
+  pointer-events: none;
+}
+.tp-curtain:is(
+  [data-state="intro"],
+  [data-state="covering"],
+  [data-state="covered"],
+  [data-state="lifting"]
+) {
+  visibility: visible;
+}
+.tp-curtain:is([data-state="covering"], [data-state="covered"]) {
+  pointer-events: auto;
+  cursor: progress;
+}
+
+.tp-curtain__blanket {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 46px, #2a170e12 46px 48px),
+    repeating-linear-gradient(-45deg, transparent 0 46px, #2a170e12 46px 48px),
+    radial-gradient(circle at 50% 46%, var(--color-milk) 0, transparent 60%), var(--color-honey-soft);
+  transform: translateY(calc(100% + 44px));
+  will-change: transform;
+}
+.tp-curtain__edge {
+  position: absolute;
+  left: 0;
+  display: block;
+}
+.tp-curtain__edge--top {
+  top: -39px;
+}
+.tp-curtain__edge--bottom {
+  bottom: -39px;
+  scale: 1 -1;
+}
+
+/* Phases */
+.tp-curtain[data-state="intro"] {
+  animation: tp-curtain-rest 0s linear 1.04s forwards;
+}
+.tp-curtain[data-state="intro"] .tp-curtain__blanket {
+  transform: translate(0);
+  animation: tp-curtain-lift 0.48s cubic-bezier(0.65, 0, 0.3, 1) 0.56s forwards;
+}
+.tp-curtain[data-state="covering"] .tp-curtain__blanket {
+  animation: tp-curtain-cover 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.tp-curtain[data-state="covered"] .tp-curtain__blanket {
+  transform: translate(0);
+}
+.tp-curtain[data-state="lifting"] .tp-curtain__blanket {
+  animation: tp-curtain-lift 0.46s cubic-bezier(0.65, 0, 0.3, 1) both;
+}
+
+/* Stage: a lane for Teddy, paw prints and the note */
+.tp-curtain__stage {
+  position: relative;
+  width: min(44rem, 86vw);
+  height: clamp(9rem, 24vw, 12rem);
+}
+.tp-curtain__runner {
+  position: absolute;
+  bottom: 1.4rem;
+  left: 0;
+  width: clamp(6.5rem, 15vw, 9rem);
+}
+.tp-curtain__prints {
+  position: absolute;
+  inset: auto 0 1.1rem;
+  height: 2.2rem;
+}
+.tp-curtain__print {
+  position: absolute;
+  width: clamp(1rem, 2.4vw, 1.45rem);
+  fill: var(--color-toffee);
+  opacity: 0;
+}
+.tp-curtain__note {
+  position: absolute;
+  bottom: -1.2rem;
+  left: 50%;
+  translate: -50%;
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem);
+  color: var(--color-toffee-ink);
+  white-space: nowrap;
+}
+
+/* Running: only while the curtain is up */
+.tp-curtain:not([data-state="idle"]) .tp-curtain__runner {
+  animation: tp-runner-x 1.15s cubic-bezier(0.32, 0.1, 0.4, 1) both;
+}
+.tp-curtain:not([data-state="idle"]) .tp-curtain__print {
+  animation: tp-print-step 1s ease-out both;
+}
+.tp-curtain:not([data-state="idle"]) .tp-runner__leg--fn,
+.tp-curtain:not([data-state="idle"]) .tp-runner__leg--bf {
+  animation: tp-runner-leg-a 0.32s ease-in-out infinite alternate;
+}
+.tp-curtain:not([data-state="idle"]) .tp-runner__leg--ff,
+.tp-curtain:not([data-state="idle"]) .tp-runner__leg--bn {
+  animation: tp-runner-leg-b 0.32s ease-in-out infinite alternate;
+}
+.tp-curtain:not([data-state="idle"]) .tp-runner__body {
+  animation: tp-runner-bob 0.16s ease-in-out infinite alternate;
+}
+.tp-curtain:not([data-state="idle"]) .tp-runner__tail {
+  animation: tp-runner-wag 0.22s ease-in-out infinite alternate;
+}
+.tp-curtain:not([data-state="idle"]) .tp-runner__ear {
+  animation: tp-runner-ear 0.16s ease-in-out infinite alternate;
+}
+
+@keyframes tp-curtain-cover {
+  from {
+    transform: translateY(calc(100% + 44px));
+  }
+  to {
+    transform: translate(0);
+  }
+}
+@keyframes tp-curtain-lift {
+  from {
+    transform: translate(0);
+  }
+  to {
+    transform: translateY(calc(-100% - 44px));
+  }
+}
+@keyframes tp-curtain-rest {
+  to {
+    visibility: hidden;
+  }
+}
+/* Keeps the page from scrolling while the first-load curtain is up */
+@keyframes tp-hold-still {
+  0%,
+  to {
+    overflow-y: hidden;
+  }
+}
+@keyframes tp-runner-x {
+  from {
+    translate: -40%;
+  }
+  to {
+    translate: calc(min(44rem, 86vw) / 1.5625);
+  }
+}
+@keyframes tp-runner-bob {
+  from {
+    translate: 0;
+  }
+  to {
+    translate: 0 -6px;
+  }
+}
+@keyframes tp-runner-leg-a {
+  from {
+    rotate: 24deg;
+  }
+  to {
+    rotate: -22deg;
+  }
+}
+@keyframes tp-runner-leg-b {
+  from {
+    rotate: -22deg;
+  }
+  to {
+    rotate: 24deg;
+  }
+}
+@keyframes tp-runner-wag {
+  from {
+    rotate: -14deg;
+  }
+  to {
+    rotate: 16deg;
+  }
+}
+@keyframes tp-runner-ear {
+  from {
+    rotate: -5deg;
+  }
+  to {
+    rotate: 9deg;
+  }
+}
+@keyframes tp-print-step {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+  18% {
+    opacity: 0.85;
+    scale: 1;
+  }
+  100% {
+    opacity: 0.45;
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.tp-curtain[data-state="intro"]) {
+    animation: tp-hold-still 1.04s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tp-curtain {
+    display: none !important;
+  }
+}
